@@ -10,7 +10,7 @@ public class EBayTools extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("ebaytools.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("view/ebaytools.fxml"));
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
