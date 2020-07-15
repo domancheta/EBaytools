@@ -15,7 +15,7 @@ import javafx.beans.property.StringProperty;
 
 /**
  * Model class for a sale item
- * @author
+ * @author domancheta
  */
 public class SaleItem {
     private final IntegerProperty itemNumber;
