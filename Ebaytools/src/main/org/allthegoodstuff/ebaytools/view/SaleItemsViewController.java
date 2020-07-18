@@ -3,9 +3,11 @@ package org.allthegoodstuff.ebaytools.view;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
@@ -29,7 +31,16 @@ public class SaleItemsViewController {
     @FXML
     private TableColumn<SaleItem, String> sellerColumn;
 
+    private Stage stage;
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @FXML
+    public void closeEventHandler(ActionEvent e) {
+        stage.close();
+    }
 
     // Reference to the main application.
     private EBayToolsMain mainApp;

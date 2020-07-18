@@ -32,9 +32,9 @@ public class SaleItem {
         this.itemTitle = new SimpleStringProperty(title);
         this.itemDescription = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
-        this.price = new SimpleObjectProperty<BigDecimal>(price);
-        this.endTime = new SimpleObjectProperty<LocalDate>(endTime);
-        this.startTime = new SimpleObjectProperty<LocalDate>(startTime);
+        this.price = new SimpleObjectProperty<>(price);
+        this.endTime = new SimpleObjectProperty<>(endTime);
+        this.startTime = new SimpleObjectProperty<>(startTime);
     }
 
     public int getItemNumber() {

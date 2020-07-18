@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.allthegoodstuff.ebaytools.view.SaleItemsViewController;
 
 public class EBayToolsMain extends Application {
 
@@ -22,7 +24,15 @@ public class EBayToolsMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/RootLayout.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(EBayToolsMain.class
+                .getResource("view/RootLayout.fxml"));
+        Parent root= fxmlLoader.load();
+
+//        Parent root = FXMLLoader.load(getClass().getResource("view/RootLayout.fxml"));
+
+        final SaleItemsViewController controller = fxmlLoader.getController();
+        controller.setStage(primaryStage);
+
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
