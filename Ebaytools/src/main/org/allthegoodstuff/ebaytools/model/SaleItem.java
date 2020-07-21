@@ -18,47 +18,54 @@ import javafx.beans.property.StringProperty;
  * @author domancheta
  */
 public class SaleItem {
-    private final IntegerProperty itemNumber;
-    private final StringProperty itemTitle;
+    private final IntegerProperty itemID;
+    private final StringProperty title;
     private final StringProperty itemDescription;
     private final StringProperty sellerInfo;
-    private final ObjectProperty<BigDecimal> price;
+    private final ObjectProperty<BigDecimal> currentPrice;
     private final ObjectProperty<LocalDate> endTime;
     private final ObjectProperty<LocalDate> startTime;
+    // TODO: add properties for:
+    // description
+    // high/winning bidder
+    // bid count
+    // image urls
+    // shipping info
+    // seller
 
-    public SaleItem(int itemNumber, String title, String description, String seller, BigDecimal price,
+    public SaleItem(int itemID, String title, String description, String seller, BigDecimal currentPrice,
                     LocalDate endTime, LocalDate startTime) {
-        this.itemNumber = new SimpleIntegerProperty(itemNumber);
-        this.itemTitle = new SimpleStringProperty(title);
+        this.itemID = new SimpleIntegerProperty(itemID);
+        this.title = new SimpleStringProperty(title);
         this.itemDescription = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
-        this.price = new SimpleObjectProperty<>(price);
+        this.currentPrice = new SimpleObjectProperty<>(currentPrice);
         this.endTime = new SimpleObjectProperty<>(endTime);
         this.startTime = new SimpleObjectProperty<>(startTime);
     }
 
-    public int getItemNumber() {
-        return itemNumber.get();
+    public int getItemID() {
+        return itemID.get();
     }
 
-    public void setItemNumber(int itemNumber) {
-        this.itemNumber.set(itemNumber);
+    public void setItemID(int itemID) {
+        this.itemID.set(itemID);
     }
 
-    public IntegerProperty itemNumberProperty() {
-        return itemNumber;
+    public IntegerProperty itemIDProperty() {
+        return itemID;
     }
 
-    public String getItemTitle() {
-        return itemTitle.get();
+    public String getTitle() {
+        return title.get();
     }
 
-    public void setItemTitle(String itemTitle) {
-        this.itemTitle.set(itemTitle);
+    public void setTitle(String title) {
+        this.title.set(title);
     }
 
-    public StringProperty itemTitleProperty() {
-        return itemTitle;
+    public StringProperty titleProperty() {
+        return title;
     }
 
     public String getItemDescription() {
@@ -85,16 +92,16 @@ public class SaleItem {
         return sellerInfo;
     }
 
-    public BigDecimal getPrice() {
-        return price.get();
+    public BigDecimal getCurrentPrice() {
+        return currentPrice.get();
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price.set(price);
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice.set(currentPrice);
     }
 
-    public ObjectProperty<BigDecimal> priceProperty() {
-        return price;
+    public ObjectProperty<BigDecimal> currentPriceProperty() {
+        return currentPrice;
     }
 
     public LocalDate getEndTime() {
