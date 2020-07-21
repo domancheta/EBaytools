@@ -19,7 +19,7 @@ public class SaleItemsViewController {
     private TableView<SaleItem> saleItemTable;
 
     @FXML
-    private TableColumn<SaleItem, Integer> itemNumberColumn;
+    private TableColumn<SaleItem, Integer> itemIDColumn;
     @FXML
     private TableColumn<SaleItem, String> itemTitleColumn;
     @FXML
@@ -37,6 +37,7 @@ public class SaleItemsViewController {
         this.stage = stage;
     }
 
+    // TODO: put this in 'root' control
     @FXML
     public void closeEventHandler(ActionEvent e) {
         stage.close();
