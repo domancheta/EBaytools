@@ -28,12 +28,12 @@ public class EBayToolsMain extends Application {
                 .getResource("view/RootLayout.fxml"));
         Parent root= fxmlLoader.load();
 
-//        Parent root = FXMLLoader.load(getClass().getResource("view/RootLayout.fxml"));
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
 
         final SaleItemsViewController controller = fxmlLoader.getController();
         controller.setStage(primaryStage);
 
-        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
 
