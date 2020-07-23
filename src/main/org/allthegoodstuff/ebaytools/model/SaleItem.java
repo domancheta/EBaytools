@@ -22,7 +22,7 @@ public class SaleItem {
     private final StringProperty title;
     private final StringProperty itemDescription;
     private final StringProperty sellerInfo;
-    private final ObjectProperty<BigDecimal> currentPrice;
+    private final ObjectProperty<BigDecimal> price;
     private final ObjectProperty<LocalDate> endTime;
     private final ObjectProperty<LocalDate> startTime;
     // TODO: add properties for:
@@ -33,13 +33,13 @@ public class SaleItem {
     // shipping info
     // seller
 
-    public SaleItem(int itemID, String title, String description, String seller, BigDecimal currentPrice,
+    public SaleItem(int itemID, String title, String description, String seller, BigDecimal price,
                     LocalDate endTime, LocalDate startTime) {
         this.itemID = new SimpleIntegerProperty(itemID);
         this.title = new SimpleStringProperty(title);
         this.itemDescription = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
-        this.currentPrice = new SimpleObjectProperty<>(currentPrice);
+        this.price = new SimpleObjectProperty<>(price);
         this.endTime = new SimpleObjectProperty<>(endTime);
         this.startTime = new SimpleObjectProperty<>(startTime);
     }
@@ -92,16 +92,16 @@ public class SaleItem {
         return sellerInfo;
     }
 
-    public BigDecimal getCurrentPrice() {
-        return currentPrice.get();
+    public BigDecimal getPrice() {
+        return price.get();
     }
 
-    public void setCurrentPrice(BigDecimal currentPrice) {
-        this.currentPrice.set(currentPrice);
+    public void setPrice(BigDecimal price) {
+        this.price.set(price);
     }
 
-    public ObjectProperty<BigDecimal> currentPriceProperty() {
-        return currentPrice;
+    public ObjectProperty<BigDecimal> priceProperty() {
+        return price;
     }
 
     public LocalDate getEndTime() {

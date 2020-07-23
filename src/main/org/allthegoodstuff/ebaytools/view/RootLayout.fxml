@@ -5,9 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SaleItemsViewController">
 
-    <VBox prefHeight="600.0" prefWidth="658.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.RootLayoutController">
         <MenuBar>
             <Menu mnemonicParsing="false" text="File">
                 <MenuItem mnemonicParsing="false" text="Open" />
@@ -36,34 +35,6 @@
          <VBox.margin>
             <Insets bottom="2.0" left="7.0" top="2.0" />
          </VBox.margin></TextField>
-        <TabPane tabClosingPolicy="UNAVAILABLE">
-            <Tab text="Watch">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="800.0">
-                    <TableView layoutX="70.0" layoutY="36.0" prefHeight="700.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <columns>
-                            <TableColumn fx:id="itemIDColumn" text="Item #" />
-                            <TableColumn fx:id="itemTitleColumn" prefWidth="75.0" text="Item Title" />
-                            <TableColumn fx:id="priceColumn" text="Price" />
-                            <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
-                            <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End Time" />
-                            <TableColumn fx:id="sellerColumn" prefWidth="75.0" text="Seller" />
-                            <TableColumn prefWidth="75.0" text="Image" />
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
-                </AnchorPane>
-            </Tab>
-            <Tab text="Search">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </Tab>
-            <Tab text="Database">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </Tab>
-            <Tab text="Misc">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </Tab>
-        </TabPane>
+
     </VBox>
-</AnchorPane>
+<!--</AnchorPane>-->

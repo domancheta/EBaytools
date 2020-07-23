@@ -27,10 +27,11 @@ import java.net.URI;
 public class ShopHttpClient {
 
     // TODO: synchronous get call - use asynchronous instead?
+    // TODO: be able to handle exception correctly
     public static String getSingleItem(String itemID) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         String uri = "https://open.api.ebay.com/shopping?callname=GetSingleItem&" +
-               "responseencoding=XML&appid=DominicA-eShopToo-PRD-8c8ee5576-77674917&" +
+               "responseencoding=JSON&appid=DominicA-eShopToo-PRD-8c8ee5576-77674917&" +
                "siteid=0&version=967&ItemID=" + itemID +
                "&IncludeSelector=Description,Details";
         HttpRequest request = HttpRequest.newBuilder()
