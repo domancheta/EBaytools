@@ -4,6 +4,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 
 /*Fields from the item are retrieved on the perl app:
         itemID
@@ -44,6 +45,19 @@ public class ShopHttpClient {
         return (response.body());
     }
 
+    public static CompletableFuture<String> getSingleItemAsync(String itemID) {
+        HttpClient client = HttpClient.newHttpClient();
+        String uri = "https://open.api.ebay.com/shopping?callname=GetSingleItem&" +
+                "responseencoding=JSON&appid=DominicA-eShopToo-PRD-8c8ee5576-77674917&" +
+                "siteid=0&version=967&ItemID=" + itemID +
+                "&IncludeSelector=Description,Details";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .build();
 
+        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body);
+
+    }
 
 }
