@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Ebaytools.iml" filepath="$PROJECT_DIR$/Ebaytools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EBaytools.iml" filepath="$PROJECT_DIR$/EBaytools.iml" />
     </modules>
   </component>
 </project>
