@@ -1,5 +1,7 @@
 package org.allthegoodstuff.ebaytools.view;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -12,18 +14,40 @@ public class RootLayoutController {
     @FXML
     private TextField searchText;
 
+    private FetchItemService fetchItemService;
+
     @FXML
     private void initialize() {
+        fetchItemService = new FetchItemService();
+
+        // search textfield handler
         searchText.setOnAction((event) -> {
             try {
-                String rawEbayResponse = ShopHttpClient.getSingleItem(searchText.getText());
-                System.out.println(rawEbayResponse);
+                fetchItemService.restart();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-            searchText.clear();
         });
+    }
+
+    // TODO: add fetched item info with JSON parser to the observable sales list
+    private class FetchItemService extends Service<Void> {
+
+        @Override
+        protected Task<Void> createTask() {
+            return new Task<>() {
+                @Override
+                protected Void call() throws Exception{
+                        // TODO: review validity of handling search textfield in the task
+                        // TODO: should asynchronous version of http call be used?
+                        String rawEbayResponse = ShopHttpClient.getSingleItem(searchText.getText());
+                        System.out.println(rawEbayResponse);
+                        searchText.clear();
+                    return null;
+                }
+            };
+        }
     }
 
     /**

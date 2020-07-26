@@ -35,7 +35,6 @@ public class SalesItemsViewController {
        startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
        endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
-
     }
 
     private EBayToolsMain mainApp;
