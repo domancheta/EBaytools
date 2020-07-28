@@ -1,6 +1,8 @@
 package org.allthegoodstuff.ebaytools.view;
 
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -8,6 +10,7 @@ import javafx.scene.control.TableView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class SalesItemsViewController {
@@ -27,6 +30,11 @@ public class SalesItemsViewController {
     @FXML
     private TableColumn<SaleItem, String> sellerColumn;
 
+    /**
+     * The data as an observable list of Persons.
+     */
+    private static ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
+
     @FXML
     private void initialize() {
        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
@@ -35,12 +43,17 @@ public class SalesItemsViewController {
        startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
        endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
+
+        // Add some sample data
+        addItemToSalesList(new SaleItem(12345, "ipod classic", "classic ipod",
+                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
+//        saleItemData.add(new SaleItem(12345, "ipod classic", "classic ipod",
+//                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
+        saleItemTable.setItems(saleItemData);
     }
 
-    private EBayToolsMain mainApp;
+    public static void addItemToSalesList(SaleItem saleItem) {
+        saleItemData.add(saleItem);
 
-    public void setMainApp(EBayToolsMain mainApp) {
-        this.mainApp = mainApp;
-        saleItemTable.setItems(mainApp.getSalesData());
     }
 }
