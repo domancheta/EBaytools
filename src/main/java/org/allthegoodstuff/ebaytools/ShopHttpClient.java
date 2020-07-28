@@ -1,9 +1,16 @@
 package org.allthegoodstuff.ebaytools;
 
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
+
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 
 /*Fields from the item are retrieved on the perl app:
@@ -27,14 +34,28 @@ import java.util.concurrent.CompletableFuture;
 
 public class ShopHttpClient {
 
+    private static DateTimeFormatter dateFormatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
     // TODO: synchronous get call - use asynchronous instead?
     // TODO: be able to handle exception correctly
     public static String getSingleItem(String itemID) throws Exception {
+        // TODO: will need to store the substrings for the api call somewhere
+        String baseUri = "https://open.api.ebay.com/shopping?callname=GetSingleItem";
+        String respEncoding = "responseencoding=JSON";
+        //todo: is there a generic yet secure appID for any user
+        String appID = "appid=DominicA-eShopToo-PRD-8c8ee5576-77674917";
+        String siteID = "siteid=0";
+        String version = "version=967";
+        String incSelector = "IncludeSelector=Description,Details";
+
         HttpClient client = HttpClient.newHttpClient();
-        String uri = "https://open.api.ebay.com/shopping?callname=GetSingleItem&" +
-               "responseencoding=JSON&appid=DominicA-eShopToo-PRD-8c8ee5576-77674917&" +
-               "siteid=0&version=967&ItemID=" + itemID +
-               "&IncludeSelector=Description,Details";
+        StringBuilder sb = new StringBuilder();
+        String uri = sb.append(baseUri).append("&").append(respEncoding).append("&")
+                        .append(appID).append("&").append(siteID).append("&").append(version)
+                        .append("&") .append("ItemID=").append(itemID).append("&").append(incSelector).toString();
+        //System.out.println ("the built api call:\n" + uri);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .build();
@@ -42,6 +63,33 @@ public class ShopHttpClient {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        Any any = JsonIterator.deserialize(response.body());
+
+        System.out.println("Retrieving title for product " + itemID + ": " +
+                any.toString("Item", "Title"));
+        System.out.println("Description :\n " +
+                any.toString("Item", "Description"));
+        System.out.println("Seller :\n " +
+                any.toString("Item", "Seller", "UserID"));
+        System.out.println("Price :\n " +
+                any.toString("Item", "CurrentPrice", "Value"));
+        System.out.println("end time :\n " +
+                any.toString("Item", "EndTime"));
+        System.out.println("start time :\n " +
+                any.toString("Item", "StartTime"));
+
+        // todo: disallow dupe items
+        // todo: find best way to log errors and provide error feedback
+        SalesItemsViewController.addItemToSalesList(new SaleItem(
+                itemID, any.toString("Item", "Title"),
+                any.toString("Item", "Description"),
+                any.toString("Item", "Seller", "UserID"),
+                any.toBigDecimal("Item", "CurrentPrice", "Value"),
+                LocalDateTime.parse(any.toString("Item", "EndTime"), dateFormatter),
+                LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
+        ));
+
+        //todo: define proper return value if any.  some way to test this method
         return (response.body());
     }
 
