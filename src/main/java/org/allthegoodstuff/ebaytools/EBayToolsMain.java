@@ -21,20 +21,8 @@ public class EBayToolsMain extends Application {
     private Stage primaryStage;
     VBox rootLayout;
 
-    /**
-     * The data as an observable list of Persons.
-     */
-    private ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
-
-    //TODO: initialize table with something - remove after further development
     public EBayToolsMain() {
-        // Add some sample data
-        saleItemData.add(new SaleItem(12345, "ipod classic", "classic ipod",
-                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
-    }
 
-    public ObservableList<SaleItem> getSalesData() {
-        return saleItemData;
     }
 
     @Override
@@ -90,7 +78,6 @@ public class EBayToolsMain extends Application {
 
             // Give the controller access to the main app.
             SalesItemsViewController controller = loader.getController();
-            controller.setMainApp(this);
 
         } catch (IOException e) {
             e.printStackTrace();
