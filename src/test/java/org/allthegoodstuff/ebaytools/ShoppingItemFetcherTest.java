@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 
-class ShopHttpClientTest {
+class ShoppingItemFetcherTest {
 
     @Test
     void getSingleAuctionItemTest() {
@@ -12,7 +12,7 @@ class ShopHttpClientTest {
         String rs;
 
         try {
-            rs = ShopHttpClient.getSingleItem(itemID);
+            rs = ShoppingItemFetcher.getSingleItem(itemID);
 
             System.out.println(rs);
         }
@@ -27,7 +27,7 @@ class ShopHttpClientTest {
         String rs;
 
         try {
-            rs = ShopHttpClient.getSingleItem(itemID);
+            rs = ShoppingItemFetcher.getSingleItem(itemID);
 
             System.out.println(rs);
         }
@@ -42,7 +42,7 @@ class ShopHttpClientTest {
         CompletableFuture<String> rs;
 
         try {
-            rs = ShopHttpClient.getSingleItemAsync(itemID);
+            rs = ShoppingItemFetcher.getSingleItemAsync(itemID);
             rs.join();
 
             System.out.println(rs.get());

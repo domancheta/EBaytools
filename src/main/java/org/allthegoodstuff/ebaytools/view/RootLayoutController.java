@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
-import org.allthegoodstuff.ebaytools.ShopHttpClient;
+import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 
 public class RootLayoutController {
 
@@ -41,7 +41,7 @@ public class RootLayoutController {
                 protected Void call() throws Exception{
                         // TODO: review validity of handling search textfield in the task
                         // TODO: should asynchronous version of http call be used?
-                        String rawEbayResponse = ShopHttpClient.getSingleItem(searchText.getText());
+                        String rawEbayResponse = ShoppingItemFetcher.getSingleItem(searchText.getText());
                         System.out.println(rawEbayResponse);
                         searchText.clear();
                     return null;

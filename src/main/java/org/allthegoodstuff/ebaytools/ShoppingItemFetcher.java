@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
         - seller
 */
 
-public class ShopHttpClient {
+public class ShoppingItemFetcher {
 
     private static DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -65,21 +65,9 @@ public class ShopHttpClient {
 
         Any any = JsonIterator.deserialize(response.body());
 
-        System.out.println("Retrieving title for product " + itemID + ": " +
-                any.toString("Item", "Title"));
-        System.out.println("Description :\n " +
-                any.toString("Item", "Description"));
-        System.out.println("Seller :\n " +
-                any.toString("Item", "Seller", "UserID"));
-        System.out.println("Price :\n " +
-                any.toString("Item", "CurrentPrice", "Value"));
-        System.out.println("end time :\n " +
-                any.toString("Item", "EndTime"));
-        System.out.println("start time :\n " +
-                any.toString("Item", "StartTime"));
-
         // todo: disallow dupe items
         // todo: find best way to log errors and provide error feedback
+        // todo: design issue - display the page item to a preview pane and allow user to add to the watchlist table
         SalesItemsViewController.addItemToSalesList(new SaleItem(
                 itemID, any.toString("Item", "Title"),
                 any.toString("Item", "Description"),
