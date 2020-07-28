@@ -27,7 +27,7 @@ public class SaleItem {
     private final ObjectProperty<LocalDate> startTime;
     // TODO: add properties for:
     // description
-    // high/winning bidder
+    // high/winning bidder (this will be hidden partially or completely for protection of users - maybe don't include)
     // bid count
     // image urls
     // shipping info
