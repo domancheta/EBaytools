@@ -83,10 +83,10 @@ public class EBayToolsMain extends Application {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(EBayToolsMain.class.getResource("view/SalesItemsView.fxml"));
-            AnchorPane personOverview = (AnchorPane) loader.load();
+            AnchorPane salesItemsView = (AnchorPane) loader.load();
 
             // Set person overview into the center of root layout.
-            rootLayout.getChildren().addAll(personOverview);
+            rootLayout.getChildren().addAll(salesItemsView);
 
             // Give the controller access to the main app.
             SalesItemsViewController controller = loader.getController();
