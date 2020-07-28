@@ -1,14 +1,12 @@
 package org.allthegoodstuff.ebaytools.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 // TODO: tentative classname for item being auction or sold on ebay.  can look up naming in ebay if you want
@@ -18,13 +16,13 @@ import javafx.beans.property.StringProperty;
  * @author domancheta
  */
 public class SaleItem {
-    private final IntegerProperty itemID;
+    private final StringProperty itemID;
     private final StringProperty title;
     private final StringProperty itemDescription;
     private final StringProperty sellerInfo;
     private final ObjectProperty<BigDecimal> price;
-    private final ObjectProperty<LocalDate> endTime;
-    private final ObjectProperty<LocalDate> startTime;
+    private final ObjectProperty<LocalDateTime> endTime;
+    private final ObjectProperty<LocalDateTime> startTime;
     // TODO: add properties for:
     // description
     // high/winning bidder (this will be hidden partially or completely for protection of users - maybe don't include)
@@ -32,27 +30,28 @@ public class SaleItem {
     // image urls
     // shipping info
     // seller
+    // others?
 
-    public SaleItem(int itemID, String title, String description, String seller, BigDecimal price,
-                    LocalDate endTime, LocalDate startTime) {
-        this.itemID = new SimpleIntegerProperty(itemID);
+    public SaleItem(String itemID, String title, String description, String seller, BigDecimal price,
+                    LocalDateTime endTime, LocalDateTime startTime) {
+        this.itemID = new SimpleStringProperty(itemID);
         this.title = new SimpleStringProperty(title);
         this.itemDescription = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
         this.price = new SimpleObjectProperty<>(price);
-        this.endTime = new SimpleObjectProperty<>(endTime);
-        this.startTime = new SimpleObjectProperty<>(startTime);
+        this.endTime = new SimpleObjectProperty<LocalDateTime>(endTime);
+        this.startTime = new SimpleObjectProperty<LocalDateTime>(startTime);
     }
 
-    public int getItemID() {
+    public String getItemID() {
         return itemID.get();
     }
 
-    public void setItemID(int itemID) {
+    public void setItemID(String itemID) {
         this.itemID.set(itemID);
     }
 
-    public IntegerProperty itemIDProperty() {
+    public StringProperty itemIDProperty() {
         return itemID;
     }
 
@@ -104,27 +103,27 @@ public class SaleItem {
         return price;
     }
 
-    public LocalDate getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime.get();
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime.set(endTime);
     }
 
-    public ObjectProperty<LocalDate> endTimeProperty() {
+    public ObjectProperty<LocalDateTime> endTimeProperty() {
         return endTime;
     }
 
-    public LocalDate getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime.get();
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime.set(startTime);
     }
 
-    public ObjectProperty<LocalDate> startTimeProperty() {
+    public ObjectProperty<LocalDateTime> startTimeProperty() {
         return startTime;
     }
 }

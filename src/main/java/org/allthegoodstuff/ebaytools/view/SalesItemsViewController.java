@@ -3,30 +3,28 @@ package org.allthegoodstuff.ebaytools.view;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class SalesItemsViewController {
     @FXML
     private TableView<SaleItem> saleItemTable;
 
     @FXML
-    private TableColumn<SaleItem, Number> itemIDColumn;
+    private TableColumn<SaleItem, String> itemIDColumn;
     @FXML
     private TableColumn<SaleItem, String> titleColumn;
     @FXML
     private TableColumn<SaleItem, String> priceColumn;
     @FXML
-    private TableColumn<SaleItem, LocalDate> startTimeColumn;
+    private TableColumn<SaleItem, LocalDateTime> startTimeColumn;
     @FXML
-    private TableColumn<SaleItem, LocalDate> endTimeColumn;
+    private TableColumn<SaleItem, LocalDateTime> endTimeColumn;
     @FXML
     private TableColumn<SaleItem, String> sellerColumn;
 
@@ -45,8 +43,8 @@ public class SalesItemsViewController {
        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
 
         // Add some sample data
-        addItemToSalesList(new SaleItem(12345, "ipod classic", "classic ipod",
-                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
+        addItemToSalesList(new SaleItem("12345", "ipod classic", "classic ipod",
+                "apple_lover", new BigDecimal("99.98"), LocalDateTime.now(), LocalDateTime.now()));
 //        saleItemData.add(new SaleItem(12345, "ipod classic", "classic ipod",
 //                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
         saleItemTable.setItems(saleItemData);
