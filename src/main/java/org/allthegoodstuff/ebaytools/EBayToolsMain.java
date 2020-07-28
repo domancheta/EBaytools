@@ -1,20 +1,15 @@
 package org.allthegoodstuff.ebaytools;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.allthegoodstuff.ebaytools.view.RootLayoutController;
 import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class EBayToolsMain extends Application {
 
