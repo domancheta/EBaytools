@@ -45,8 +45,6 @@ public class SalesItemsViewController {
         // Add some sample data
         addItemToSalesList(new SaleItem("12345", "ipod classic", "classic ipod",
                 "apple_lover", new BigDecimal("99.98"), LocalDateTime.now(), LocalDateTime.now()));
-//        saleItemData.add(new SaleItem(12345, "ipod classic", "classic ipod",
-//                "apple_lover", new BigDecimal("99.98"), LocalDate.now(), LocalDate.now()));
         saleItemTable.setItems(saleItemData);
     }
 

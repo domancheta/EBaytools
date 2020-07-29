@@ -3,13 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SalesItemsViewController">
-    <TabPane tabClosingPolicy="UNAVAILABLE">
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SalesItemsViewController"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Tab text="Watch">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1024.0">
-                <TableView fx:id="saleItemTable" layoutX="70.0" layoutY="36.0" prefHeight="700.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <TableView fx:id="saleItemTable" layoutX="70.0" layoutY="36.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="itemIDColumn" text="Item #" />
+                        <TableColumn fx:id="itemIDColumn" text="Item ID" />
                         <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Item Title" />
                         <TableColumn fx:id="priceColumn" text="Price" />
                         <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
