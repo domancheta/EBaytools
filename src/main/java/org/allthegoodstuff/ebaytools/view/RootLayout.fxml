@@ -29,18 +29,18 @@
         </MenuBar>
     <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
         <VBox SplitPane.resizableWithParent="false">
-            <VBox.margin>
-                <Insets bottom="2.0" left="7.0" top="2.0" />
-            </VBox.margin>
             <TextField fx:id="searchText" alignment="TOP_LEFT" maxWidth="300.0" minHeight="24.0" minWidth="60.0" promptText="Search">
                 <font>
                     <Font name="SansSerif Regular" size="12.0" />
                 </font>
+            <VBox.margin>
+               <Insets bottom="5.0" left="7.0" top="5.0" />
+            </VBox.margin>
             </TextField>
             <AnchorPane fx:id="SalesListPane" VBox.vgrow="ALWAYS" />
 
         </VBox>
-        <AnchorPane />
+        <AnchorPane maxWidth="-Infinity" prefWidth="700.0" />
     </SplitPane>
 
 
