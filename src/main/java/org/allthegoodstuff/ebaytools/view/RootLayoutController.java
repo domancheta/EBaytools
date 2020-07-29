@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 
@@ -13,6 +14,9 @@ public class RootLayoutController {
 
     @FXML
     private TextField searchText;
+
+    @FXML
+    private AnchorPane SalesListPane;
 
     private FetchItemService fetchItemService;
 
@@ -29,6 +33,10 @@ public class RootLayoutController {
                 e.printStackTrace();
             }
         });
+    }
+
+    public AnchorPane getSalesListPane() {
+        return SalesListPane;
     }
 
     // TODO: add fetched item info with JSON parser to the observable sales list

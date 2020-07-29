@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -27,12 +28,22 @@
                 <MenuItem mnemonicParsing="false" text="About" />
             </Menu>
         </MenuBar>
-        <TextField fx:id="searchText" alignment="TOP_LEFT" maxWidth="300.0" minHeight="24.0" minWidth="60.0" promptText="Search">
-         <font>
-            <Font name="SansSerif Regular" size="12.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="2.0" left="7.0" top="2.0" />
-         </VBox.margin></TextField>
+    <SplitPane dividerPositions="0.5">
+
+        <VBox>
+            <VBox.margin>
+                <Insets bottom="2.0" left="7.0" top="2.0" />
+            </VBox.margin>
+            <TextField fx:id="searchText" alignment="TOP_LEFT" maxWidth="300.0" minHeight="24.0" minWidth="60.0" promptText="Search">
+                <font>
+                    <Font name="SansSerif Regular" size="12.0" />
+                </font>
+            </TextField>
+            <AnchorPane fx:id="SalesListPane" prefHeight="200.0" prefWidth="200.0" />
+
+        </VBox>
+        <Canvas height="200.0" width="700.0" />
+    </SplitPane>
+
 
     </VBox>

@@ -14,7 +14,8 @@ import java.io.IOException;
 public class EBayToolsMain extends Application {
 
     private Stage primaryStage;
-    VBox rootLayout;
+    private VBox rootLayout;
+    private RootLayoutController rootLayoutController;
 
     public EBayToolsMain() {
 
@@ -47,8 +48,8 @@ public class EBayToolsMain extends Application {
             primaryStage.setScene(scene);
 
             // Give the controller access to the main app.
-            final RootLayoutController controller = fxmlLoader.getController();
-            controller.setMainApp(this);
+            rootLayoutController = fxmlLoader.getController();
+            rootLayoutController.setMainApp(this);
 
             primaryStage.show();
 
@@ -68,8 +69,8 @@ public class EBayToolsMain extends Application {
             loader.setLocation(EBayToolsMain.class.getResource("view/SalesItemsView.fxml"));
             AnchorPane salesItemsView = (AnchorPane) loader.load();
 
-            // Set person overview into the center of root layout.
-            rootLayout.getChildren().addAll(salesItemsView);
+            // Set person overview into the location of the layout
+            rootLayoutController.getSalesListPane().getChildren().add(salesItemsView);
 
             // Give the controller access to the main app.
             SalesItemsViewController controller = loader.getController();
