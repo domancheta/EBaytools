@@ -38,7 +38,6 @@ public class ShoppingItemFetcher {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     // TODO: synchronous get call - use asynchronous instead?
-    // TODO: be able to handle exception correctly
     public static String getSingleItem(String itemID) throws Exception {
         // TODO: will need to store the substrings for the api call somewhere
         String baseUri = "https://open.api.ebay.com/shopping?callname=GetSingleItem";
@@ -63,9 +62,10 @@ public class ShoppingItemFetcher {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        // TODO: be able to handle exception correctly
+
         Any any = JsonIterator.deserialize(response.body());
 
-        // todo: disallow dupe items
         // todo: find best way to log errors and provide error feedback
         // todo: design issue - display the page item to a preview pane and allow user to add to the watchlist table
         SalesItemsViewController.addItemToSalesList(new SaleItem(

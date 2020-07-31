@@ -26,6 +26,9 @@ public class RootLayoutController {
 
         // search textfield handler
         searchText.setOnAction((event) -> {
+            if (SalesItemsViewController.itemExists(searchText.getText())) {
+                return;
+            }
             try {
                 fetchItemService.restart();
             }

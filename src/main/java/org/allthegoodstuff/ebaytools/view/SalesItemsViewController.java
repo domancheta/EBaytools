@@ -50,6 +50,14 @@ public class SalesItemsViewController {
 
     public static void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
+    }
 
+    public static boolean itemExists (String itemID) {
+        for (SaleItem item : saleItemData) {
+            if ( item.getItemID().equals(itemID))
+                return true;
+        }
+
+        return false;
     }
 }
