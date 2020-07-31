@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 
@@ -18,6 +19,9 @@ public class RootLayoutController {
     @FXML
     private AnchorPane SalesListPane;
 
+    @FXML
+    private WebView browser;
+
     private FetchItemService fetchItemService;
 
     @FXML
@@ -29,12 +33,17 @@ public class RootLayoutController {
             if (SalesItemsViewController.itemExists(searchText.getText())) {
                 return;
             }
+            String itemUrl = "https://www.ebay.com/itm/" + searchText.getText();
+            browser.getEngine().load(itemUrl);
+            System.out.println ("Pointing browser to " + itemUrl);
+
             try {
                 fetchItemService.restart();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
+
         });
     }
 
@@ -54,6 +63,7 @@ public class RootLayoutController {
                         // TODO: should asynchronous version of http call be used?
                         String rawEbayResponse = ShoppingItemFetcher.getSingleItem(searchText.getText());
                         System.out.println(rawEbayResponse);
+
                         searchText.clear();
                     return null;
                 }
@@ -75,4 +85,5 @@ public class RootLayoutController {
         mainApp.getPrimaryStage().close();
 
     }
+
 }
