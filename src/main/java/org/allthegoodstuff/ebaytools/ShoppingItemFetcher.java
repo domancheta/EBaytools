@@ -39,22 +39,10 @@ public class ShoppingItemFetcher {
 
     // TODO: synchronous get call - use asynchronous instead?
     public static String getSingleItem(String itemID) throws Exception {
-        // TODO: will need to store the substrings for the api call somewhere
-        String baseUri = "https://open.api.ebay.com/shopping?callname=GetSingleItem";
-        String respEncoding = "responseencoding=JSON";
-        //todo: is there a generic yet secure appID for any user
-        String appID = "appid=DominicA-eShopToo-PRD-8c8ee5576-77674917";
-        String siteID = "siteid=0";
-        String version = "version=967";
-        String incSelector = "IncludeSelector=Description,Details";
+
+        String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
 
         HttpClient client = HttpClient.newHttpClient();
-        StringBuilder sb = new StringBuilder();
-        String uri = sb.append(baseUri).append("&").append(respEncoding).append("&")
-                        .append(appID).append("&").append(siteID).append("&").append(version)
-                        .append("&") .append("ItemID=").append(itemID).append("&").append(incSelector).toString();
-        //System.out.println ("the built api call:\n" + uri);
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .build();
@@ -63,7 +51,7 @@ public class ShoppingItemFetcher {
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
         // TODO: be able to handle exception correctly
-
+        // TODO: is the jsoniter Any method the fastest way to parse the JSON response?
         Any any = JsonIterator.deserialize(response.body());
 
         // todo: find best way to log errors and provide error feedback
@@ -82,18 +70,15 @@ public class ShoppingItemFetcher {
     }
 
     public static CompletableFuture<String> getSingleItemAsync(String itemID) {
+        String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
+
         HttpClient client = HttpClient.newHttpClient();
-        String uri = "https://open.api.ebay.com/shopping?callname=GetSingleItem&" +
-                "responseencoding=JSON&appid=DominicA-eShopToo-PRD-8c8ee5576-77674917&" +
-                "siteid=0&version=967&ItemID=" + itemID +
-                "&IncludeSelector=Description,Details";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .build();
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
-
     }
 
 }
