@@ -35,7 +35,6 @@ public class RootLayoutController {
             }
             String itemUrl = "https://www.ebay.com/itm/" + searchText.getText();
             browser.getEngine().load(itemUrl);
-            System.out.println ("Pointing browser to " + itemUrl);
 
             try {
                 fetchItemService.restart();
@@ -62,7 +61,8 @@ public class RootLayoutController {
                         // TODO: review validity of handling search textfield in the task
                         // TODO: should asynchronous version of http call be used?
                         String rawEbayResponse = ShoppingItemFetcher.getSingleItem(searchText.getText());
-                        System.out.println(rawEbayResponse);
+                        //todo: add log line here
+                        //System.out.println(rawEbayResponse);
 
                         searchText.clear();
                     return null;
