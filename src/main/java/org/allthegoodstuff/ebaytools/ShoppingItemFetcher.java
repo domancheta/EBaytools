@@ -3,7 +3,6 @@ package org.allthegoodstuff.ebaytools;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
-import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,7 +37,7 @@ public class ShoppingItemFetcher {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     // TODO: synchronous get call - use asynchronous instead?
-    public static String getSingleItem(String itemID) throws Exception {
+    public static SaleItem getSingleItem(String itemID) throws Exception {
 
         String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
 
@@ -57,17 +56,15 @@ public class ShoppingItemFetcher {
 
         // todo: find best way to log errors and provide error feedback
         // todo: design issue - display the page item to a preview pane and allow user to add to the watchlist table
-        SalesItemsViewController.addItemToSalesList(new SaleItem(
+        return new SaleItem(
                 itemID, any.toString("Item", "Title"),
                 any.toString("Item", "Description"),
                 any.toString("Item", "Seller", "UserID"),
                 any.toBigDecimal("Item", "CurrentPrice", "Value"),
                 LocalDateTime.parse(any.toString("Item", "EndTime"), dateFormatter),
                 LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
-        ));
+                );
 
-        //todo: define proper return value if any.  some way to test this method
-        return (response.body());
     }
 
     public static CompletableFuture<String> getSingleItemAsync(String itemID) {
