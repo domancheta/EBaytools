@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.allthegoodstuff.ebaytools.db.Database;
+import org.allthegoodstuff.ebaytools.db.SQLiteDB;
 import org.allthegoodstuff.ebaytools.view.RootLayoutController;
 import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
 
@@ -16,9 +18,12 @@ public class EBayToolsMain extends Application {
     private Stage primaryStage;
     private VBox rootLayout;
     private RootLayoutController rootLayoutController;
+    final private Database db;
 
     public EBayToolsMain() {
-
+        // local db singleton allowing only one connection during app lifetime
+        // todo: use a DI framework
+        db = SQLiteDB.getInstance();
     }
 
     @Override
@@ -64,16 +69,18 @@ public class EBayToolsMain extends Application {
 
     private void showSalesItemsView() {
         try {
-            // Load person overview.
+            // Load sales item view.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(EBayToolsMain.class.getResource("view/SalesItemsView.fxml"));
             AnchorPane salesItemsView = (AnchorPane) loader.load();
 
-            // Set person overview into the location of the layout
+            // Set sales list view into the location of the layout
             rootLayoutController.getSalesListPane().getChildren().add(salesItemsView);
 
+            db.getAllSalesItemRows();
             // Give the controller access to the main app.
             SalesItemsViewController controller = loader.getController();
+            controller.setDBAccess(db);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,4 +94,14 @@ public class EBayToolsMain extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
+
+    @Override
+    public void stop () {
+        // this is one of the last methods executed when the app exits
+        // todo: find where else that the app may inadvertently exit and fail to close db connection
+        db.shutdown();
+        System.out.println ("Exitted this wonderful app!  Have a nice day!");
+    }
+
+
 }

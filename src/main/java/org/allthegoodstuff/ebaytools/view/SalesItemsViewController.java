@@ -6,9 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class SalesItemsViewController {
@@ -33,6 +33,8 @@ public class SalesItemsViewController {
      */
     private static ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
 
+    private static Database db;
+
     @FXML
     private void initialize() {
        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
@@ -43,13 +45,15 @@ public class SalesItemsViewController {
        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
 
         // Add some sample data
-        addItemToSalesList(new SaleItem("12345", "ipod classic", "classic ipod",
-                "apple_lover", new BigDecimal("99.98"), LocalDateTime.now(), LocalDateTime.now()));
+//        addItemToSalesList(new SaleItem("12345", "ipod classic", "classic ipod",
+//                "apple_lover", new BigDecimal("99.98"), LocalDateTime.now(), LocalDateTime.now()));
         saleItemTable.setItems(saleItemData);
     }
 
     public static void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
+        //todo: action to enter into database should be actually done on 'add to watchlist' button action event
+        db.insertSaleItemRow(saleItem);
     }
 
     public static boolean itemExists (String itemID) {
@@ -59,5 +63,11 @@ public class SalesItemsViewController {
         }
 
         return false;
+    }
+
+    public void setDBAccess (Database db) {
+        this.db = db;
+
+        saleItemData.addAll( db.getAllSalesItemRows() );
     }
 }
