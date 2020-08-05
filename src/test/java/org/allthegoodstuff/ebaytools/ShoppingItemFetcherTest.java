@@ -1,5 +1,7 @@
 package org.allthegoodstuff.ebaytools;
 
+import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
@@ -12,9 +14,9 @@ class ShoppingItemFetcherTest {
         String rs;
 
         try {
-            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            SaleItem si = ShoppingItemFetcher.getSingleItem(itemID);
 
-            System.out.println(rs);
+            Assertions.assertEquals(itemID, si.getItemID());
         }
         catch (Exception e) {
             System.err.println("Exception thrown: " + e.getMessage());
@@ -27,9 +29,9 @@ class ShoppingItemFetcherTest {
         String rs;
 
         try {
-            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            SaleItem si = ShoppingItemFetcher.getSingleItem(itemID);
 
-            System.out.println(rs);
+            Assertions.assertEquals(itemID, si.getItemID());
         }
         catch (Exception e) {
             System.err.println("Exception thrown: " + e.getMessage());
@@ -44,8 +46,7 @@ class ShoppingItemFetcherTest {
         try {
             rs = ShoppingItemFetcher.getSingleItemAsync(itemID);
             rs.join();
-
-            System.out.println(rs.get());
+            Assertions.assertEquals(true, rs.get().contains("\"ItemID\":\"" + itemID + "\""));
         }
         catch (Exception e) {
             System.err.println("Exception thrown: " + e.getMessage());
