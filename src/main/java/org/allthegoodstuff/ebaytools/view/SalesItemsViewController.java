@@ -31,9 +31,11 @@ public class SalesItemsViewController {
     /**
      * The data as an observable list of Persons.
      */
-    private static ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
+    private ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
 
-    private static Database db;
+    private Database db;
+
+    RootLayoutController rootLayoutController;
 
     @FXML
     private void initialize() {
@@ -44,19 +46,23 @@ public class SalesItemsViewController {
        endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
 
-        // Add some sample data
-//        addItemToSalesList(new SaleItem("12345", "ipod classic", "classic ipod",
-//                "apple_lover", new BigDecimal("99.98"), LocalDateTime.now(), LocalDateTime.now()));
-        saleItemTable.setItems(saleItemData);
+       saleItemTable.setItems(saleItemData);
+
+       saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                   if (newSelection != null) {
+                    rootLayoutController.showItemBrowserPage(newSelection.getItemID());
+                    System.out.println ("selected item #: " + newSelection.getItemID());
+                   }
+               } );
     }
 
-    public static void addItemToSalesList(SaleItem saleItem) {
+    public void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
         //todo: action to enter into database should be actually done on 'add to watchlist' button action event
         db.insertSaleItemRow(saleItem);
     }
 
-    public static boolean itemExists (String itemID) {
+    public boolean itemExists (String itemID) {
         for (SaleItem item : saleItemData) {
             if ( item.getItemID().equals(itemID))
                 return true;
@@ -65,9 +71,14 @@ public class SalesItemsViewController {
         return false;
     }
 
-    public void setDBAccess (Database db) {
+    public void setDatabaseAccess(Database db) {
         this.db = db;
 
         saleItemData.addAll( db.getAllSalesItemRows() );
     }
+
+    public void setRootLayoutControllerAccess(RootLayoutController rootLayoutController) {
+        this.rootLayoutController = rootLayoutController;
+    }
+
 }

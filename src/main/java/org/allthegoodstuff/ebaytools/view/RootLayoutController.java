@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
+import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 public class RootLayoutController {
 
@@ -24,17 +25,19 @@ public class RootLayoutController {
 
     private FetchItemService fetchItemService;
 
+    private SalesItemsViewController salesItemsViewController;
+
     @FXML
     private void initialize() {
         fetchItemService = new FetchItemService();
 
         // search textfield handler
         searchText.setOnAction((event) -> {
-            if (SalesItemsViewController.itemExists(searchText.getText())) {
+            if (salesItemsViewController.itemExists(searchText.getText())) {
                 return;
             }
-            String itemUrl = "https://www.ebay.com/itm/" + searchText.getText();
-            browser.getEngine().load(itemUrl);
+
+            showItemBrowserPage(searchText.getText());
 
             try {
                 fetchItemService.restart();
@@ -44,6 +47,11 @@ public class RootLayoutController {
             }
 
         });
+    }
+
+    public void showItemBrowserPage (String itemID) {
+        String itemUrl = "https://www.ebay.com/itm/" + itemID;
+        browser.getEngine().load(itemUrl);
     }
 
     public AnchorPane getSalesListPane() {
@@ -60,10 +68,8 @@ public class RootLayoutController {
                 protected Void call() throws Exception{
                         // TODO: review validity of handling search textfield in the task
                         // TODO: should asynchronous version of http call be used?
-                        String rawEbayResponse = ShoppingItemFetcher.getSingleItem(searchText.getText());
-                        //todo: add log line here
-                        //System.out.println(rawEbayResponse);
-
+                        SaleItem newSaleItem = ShoppingItemFetcher.getSingleItem(searchText.getText());
+                        salesItemsViewController.addItemToSalesList(newSaleItem);
                         searchText.clear();
                     return null;
                 }
@@ -80,8 +86,13 @@ public class RootLayoutController {
         this.mainApp = mainApp;
     }
 
+    public void setSalesItemsViewController(SalesItemsViewController salesItemsViewController) {
+       this.salesItemsViewController = salesItemsViewController;
+    }
+
     @FXML
     public void closeEventHandler(ActionEvent e) {
+        //todo: bring up confirmation box that can be opted out of for future sessions
         mainApp.getPrimaryStage().close();
 
     }
