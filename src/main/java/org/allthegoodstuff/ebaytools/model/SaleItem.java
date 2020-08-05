@@ -18,12 +18,12 @@ import java.time.LocalDateTime;
 public class SaleItem {
     private final StringProperty itemID;
     private final StringProperty title;
-    private final StringProperty itemDescription;
+    private final StringProperty description;
     private final StringProperty sellerInfo;
     private final ObjectProperty<BigDecimal> price;
     private final ObjectProperty<LocalDateTime> endTime;
     private final ObjectProperty<LocalDateTime> startTime;
-    // TODO: add properties for:
+    // TODO: add properties for and add for db as well:
     // description
     // high/winning bidder (this will be hidden partially or completely for protection of users - maybe don't include)
     // bid count
@@ -36,7 +36,7 @@ public class SaleItem {
                     LocalDateTime endTime, LocalDateTime startTime) {
         this.itemID = new SimpleStringProperty(itemID);
         this.title = new SimpleStringProperty(title);
-        this.itemDescription = new SimpleStringProperty( description );
+        this.description = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
         this.price = new SimpleObjectProperty<>(price);
         this.endTime = new SimpleObjectProperty<LocalDateTime>(endTime);
@@ -67,16 +67,16 @@ public class SaleItem {
         return title;
     }
 
-    public String getItemDescription() {
-        return itemDescription.get();
+    public String getDescription() {
+        return description.get();
     }
 
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription.set(itemDescription);
+    public void setDescription(String description) {
+        this.description.set(description);
     }
 
-    public StringProperty itemDescriptionProperty() {
-        return itemDescription;
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
     public String getSellerInfo() {
