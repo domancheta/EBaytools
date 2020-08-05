@@ -18,6 +18,7 @@ public class EBayToolsMain extends Application {
     private Stage primaryStage;
     private VBox rootLayout;
     private RootLayoutController rootLayoutController;
+    private SalesItemsViewController salesItemsViewController;
     final private Database db;
 
     public EBayToolsMain() {
@@ -32,6 +33,10 @@ public class EBayToolsMain extends Application {
 
         initRootLayout();
         showSalesItemsView();
+        //todo: this is probably bad injecting whole controller to the other, but it's better than
+        // static method littering
+        salesItemsViewController.setRootLayoutControllerAccess(rootLayoutController);
+        rootLayoutController.setSalesItemsViewController(salesItemsViewController);
 
     }
 
@@ -77,10 +82,9 @@ public class EBayToolsMain extends Application {
             // Set sales list view into the location of the layout
             rootLayoutController.getSalesListPane().getChildren().add(salesItemsView);
 
-            db.getAllSalesItemRows();
             // Give the controller access to the main app.
-            SalesItemsViewController controller = loader.getController();
-            controller.setDBAccess(db);
+            salesItemsViewController = loader.getController();
+            salesItemsViewController.setDatabaseAccess(db);
 
         } catch (IOException e) {
             e.printStackTrace();
