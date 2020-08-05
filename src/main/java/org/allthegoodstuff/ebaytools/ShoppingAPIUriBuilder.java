@@ -12,9 +12,9 @@ public class ShoppingAPIUriBuilder {
     }
 
     public static String getSingleItemURI (String itemID) {
-        StringBuilder fetchUri = new StringBuilder();
+        StringBuilder builtFetchUri = new StringBuilder();
 
-        return fetchUri.append(shoppingConfig.baseApiUri()).append("?")
+        String fetchUri = builtFetchUri.append(shoppingConfig.baseApiUri()).append("?")
                 .append(shoppingConfig.callname()).append("&")
                 .append(shoppingConfig.rsEncoding()).append("&")
                 .append(shoppingConfig.appID()).append("&")
@@ -23,12 +23,13 @@ public class ShoppingAPIUriBuilder {
                 .append("ItemID=").append(itemID)
                 .append("&").append(shoppingConfig.includeSelector()).toString();
 
+        return fetchUri;
     }
 
     public static String getItemStatusUri (String itemID) {
-        StringBuilder fetchUri = new StringBuilder();
+        StringBuilder builtFetchStatusUri = new StringBuilder();
 
-        return fetchUri.append(shoppingConfig.baseApiUri()).append("?")
+        String fetchStatusUri =  builtFetchStatusUri.append(shoppingConfig.baseApiUri()).append("?")
                 .append(shoppingConfig.itemStatusCallname()).append("&")
                 .append(shoppingConfig.rsEncoding()).append("&")
                 .append(shoppingConfig.appID()).append("&")
@@ -36,6 +37,8 @@ public class ShoppingAPIUriBuilder {
                 .append(shoppingConfig.apiVersion()).append("&")
                 .append("ItemID=").append(itemID)
                 .append("&").append(shoppingConfig.includeSelector()).toString();
+
+        return fetchStatusUri;
 
     }
 
