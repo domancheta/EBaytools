@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 
-/*Fields from the item are retrieved on the perl app:
+/*TODO: Fields from the item are retrieved on the perl app:
         itemID
         EndTime
         itemTitle
@@ -47,11 +47,12 @@ public class ShoppingItemFetcher {
                 .uri(URI.create(uri))
                 .build();
 
+        // TODO: be able to handle exceptions correctly
+        // handle non-200 errors: 4xx, 5xx
+        // handle non-existent content - i.e. item id doesn't exists, sales on item expired
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // TODO: be able to handle exception correctly
-        // TODO: is the jsoniter Any method the fastest way to parse the JSON response?
         Any any = JsonIterator.deserialize(response.body());
 
         // todo: find best way to log errors and provide error feedback
