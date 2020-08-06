@@ -54,6 +54,10 @@ public class RootLayoutController {
         browser.getEngine().load(itemUrl);
     }
 
+    public void showHTMLInBrowser (String html) {
+        browser.getEngine().loadContent(html) ;
+    }
+
     public AnchorPane getSalesListPane() {
         return SalesListPane;
     }
