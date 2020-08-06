@@ -2,10 +2,13 @@ package org.allthegoodstuff.ebaytools.view;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
@@ -23,12 +26,19 @@ public class RootLayoutController {
     @FXML
     private WebView browser;
 
+    private WebEngine browserEngine;
+
+    @FXML
+    private ProgressIndicator progressCircle;
+
     private FetchItemService fetchItemService;
 
     private SalesItemsViewController salesItemsViewController;
 
     @FXML
     private void initialize() {
+        browserEngine = browser.getEngine();
+
         fetchItemService = new FetchItemService();
 
         // search textfield handler
@@ -45,16 +55,28 @@ public class RootLayoutController {
             catch (Exception e) {
                 e.printStackTrace();
             }
-
         });
+
+        // bind browser view to a progress circle animation which appears only when loading
+        progressCircle.setVisible(false);
+        browserEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+                       if (newState == Worker.State.SUCCEEDED) {
+                           // hide progress indicator when page is ready
+                           progressCircle.setVisible(false);
+                       }
+
+        } );
+
     }
 
     public void showItemBrowserPage (String itemID) {
         String itemUrl = "https://www.ebay.com/itm/" + itemID;
+        progressCircle.setVisible(true);
         browser.getEngine().load(itemUrl);
     }
 
     public void showHTMLInBrowser (String html) {
+        progressCircle.setVisible(true);
         browser.getEngine().loadContent(html) ;
     }
 
