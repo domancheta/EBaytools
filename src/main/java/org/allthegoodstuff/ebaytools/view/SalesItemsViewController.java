@@ -50,8 +50,7 @@ public class SalesItemsViewController {
 
        saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                    if (newSelection != null) {
-                    rootLayoutController.showItemBrowserPage(newSelection.getItemID());
-                    System.out.println ("selected item #: " + newSelection.getItemID());
+                     rootLayoutController.showItemBrowserPage(newSelection.getItemID());
                    }
                } );
     }
