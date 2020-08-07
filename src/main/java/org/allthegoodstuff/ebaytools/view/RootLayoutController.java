@@ -47,6 +47,9 @@ public class RootLayoutController {
                 return;
             }
 
+            if (searchText.getText().isBlank())
+                return;
+
             showItemBrowserPage(searchText.getText());
 
             try {
