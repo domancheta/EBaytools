@@ -59,17 +59,17 @@ public class SQLiteDB implements Database{
             if (rs.next()) {
                 do {
                     if (rs.getString(3).equals(mainTableName))
-                        System.out.println("Table " + mainTableName + " exists!");
+                        System.out.println("Using existing table " + mainTableName );
                 } while (rs.next());
             }
             else {
-                System.out.println("Table " + mainTableName + " non-existing.  Initializing db...");
+                System.out.println("Table " + mainTableName + " doesn't existing.  Initializing db...");
 
                 String qMainTableCreate = "create table " + mainTableName + "(" + cItemID + " PRIMARY KEY," +
                         cTitle + ", " + cDescription + ", " + cSellerInfo + ", " + cPrice + " INTEGER, " +
                         cEndTime + ", " + cStartTime + ")";
-                createStatement.execute( qMainTableCreate );
-                System.out.println("Table " + mainTableName + " created successfully!");
+                if ( createStatement.execute( qMainTableCreate ) );
+                    System.out.println("Table " + mainTableName + " created successfully!");
             }
 
         } catch (SQLException se) {
