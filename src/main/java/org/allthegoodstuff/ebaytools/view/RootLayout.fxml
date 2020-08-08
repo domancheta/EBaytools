@@ -30,7 +30,7 @@
         </MenuBar>
     <SplitPane dividerPositions="0.0" VBox.vgrow="ALWAYS">
         <VBox SplitPane.resizableWithParent="false">
-            <TextField fx:id="searchText" alignment="TOP_LEFT" maxWidth="300.0" minHeight="24.0" minWidth="60.0" promptText="Search">
+            <TextField fx:id="searchText" alignment="TOP_LEFT" maxWidth="300.0" minHeight="24.0" minWidth="60.0" promptText="Enter active ebay item ID">
                 <font>
                     <Font name="SansSerif Regular" size="12.0" />
                 </font>
