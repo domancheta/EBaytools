@@ -4,8 +4,11 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.util.Callback;
 import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
@@ -37,6 +40,27 @@ public class SalesItemsViewController {
 
     RootLayoutController rootLayoutController;
 
+    // add tooltip popups to table cells
+    private <T> void addTooltipToColumnCells(TableColumn<SaleItem,T> column) {
+
+        Callback<TableColumn<SaleItem, T>, TableCell<SaleItem,T>> existingCellFactory
+                = column.getCellFactory();
+
+        column.setCellFactory(c -> {
+            TableCell<SaleItem, T> cell = existingCellFactory.call(c);
+
+            Tooltip tooltip = new Tooltip();
+            // can use arbitrary binding here to make text depend on cell
+            // in any way you need:
+            tooltip.textProperty().bind(cell.itemProperty().asString());
+
+            // disallow 'null' text tooltip for empty cells
+            cell.tooltipProperty().bind(Bindings.when(Bindings.or(cell.emptyProperty(), cell.itemProperty()
+                    .isNull())).then((Tooltip) null).otherwise(tooltip));
+            return cell ;
+        });
+    }
+
     @FXML
     private void initialize() {
        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
@@ -48,6 +72,9 @@ public class SalesItemsViewController {
 
        saleItemTable.setItems(saleItemData);
 
+       saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
+
+       // display selected row in browser
        saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                    if (newSelection != null) {
                      rootLayoutController.showItemBrowserPage(newSelection.getItemID());
