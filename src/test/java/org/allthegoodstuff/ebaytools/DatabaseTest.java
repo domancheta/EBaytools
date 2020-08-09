@@ -30,13 +30,16 @@ public class DatabaseTest {
     public void insertRowTest() {
         Database db = SQLiteDB.getInstance();
 
+        String testid = "345678";
+
         try {
 
-            int rows = db.insertSaleItemRow("345678", "another thing", "stuf stuff", "mr. sales",
+            int rows = db.insertSaleItemRow( testid, "another thing", "stuf stuff", "mr. sales",
                     new BigDecimal(3.99), LocalDateTime.now().toString(), LocalDateTime.now().toString());
             Assertions.assertEquals(1, rows);
         }
         finally {
+            db.deleteSaleItemRow(testid);
             db.shutdown();
 
         }

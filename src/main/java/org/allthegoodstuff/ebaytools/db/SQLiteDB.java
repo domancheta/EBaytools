@@ -152,6 +152,17 @@ public class SQLiteDB implements Database{
 
     }
 
+    public int deleteSaleItemRow (String itemID) {
+        try {
+            sthDeleteSalesItem.setString(1, itemID);
+            return sthDeleteSalesItem.executeUpdate();
+        } catch (SQLException se) {
+            System.err.println(se.getMessage());
+        }
+
+        return 0;
+    }
+
     public ArrayList<SaleItem> getAllSalesItemRows () {
         ArrayList<SaleItem> saleItems = new ArrayList<SaleItem>();
 
