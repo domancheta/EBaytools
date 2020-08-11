@@ -4,12 +4,19 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
+import java.util.prefs.Preferences;
 
 public class SalesItemsViewController {
     @FXML
@@ -37,6 +44,8 @@ public class SalesItemsViewController {
 
     RootLayoutController rootLayoutController;
 
+    Preferences prefs = Preferences.userNodeForPackage(EBayToolsMain.class);
+
     // add tooltip popups to table cells
     private <T> void addTooltipToColumnCells(TableColumn<SaleItem,T> column) {
 
@@ -58,6 +67,39 @@ public class SalesItemsViewController {
         });
     }
 
+    // Alert dialog with option to not ask to delete (or any other action) again
+    public static Alert createAlertWithOptOut(Alert.AlertType type, String title, String headerText,
+                                              String message, String optOutMessage, Consumer<Boolean> optOutAction,
+                                              ButtonType... buttonTypes) {
+        Alert alert = new Alert(type);
+        // Need to force the alert to layout in order to grab the graphic,
+        // as we are replacing the dialog pane with a custom pane
+        alert.getDialogPane().applyCss();
+        Node graphic = alert.getDialogPane().getGraphic();
+        // Create a new dialog pane that has a checkbox instead of the hide/show details button
+        // Use the supplied callback for the action of the checkbox
+        alert.setDialogPane(new DialogPane() {
+            @Override
+            protected Node createDetailsButton() {
+                CheckBox optOut = new CheckBox();
+                optOut.setText(optOutMessage);
+                optOut.setOnAction(e -> optOutAction.accept(optOut.isSelected()));
+                return optOut;
+            }
+        });
+        alert.getDialogPane().getButtonTypes().addAll(buttonTypes);
+        alert.getDialogPane().setContentText(message);
+        // Fool the dialog into thinking there is some expandable content
+        // a Group won't take up any space if it has no children
+        alert.getDialogPane().setExpandableContent(new Group());
+        alert.getDialogPane().setExpanded(true);
+        // Reset the dialog graphic using the default style
+        alert.getDialogPane().setGraphic(graphic);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        return alert;
+    }
+
     @FXML
     private void initialize() {
         itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
@@ -72,24 +114,46 @@ public class SalesItemsViewController {
         // show tooltips for cell items
         saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
 
-        // add action to display selected row in browser
-        saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                rootLayoutController.showItemBrowserPage(newSelection.getItemID());
-            }
-        } );
-
         // context menu popup binding and actions
         saleItemTable.setRowFactory(new Callback<TableView<SaleItem>, TableRow<SaleItem>>() {
+
+            private final String KEY_AUTO_REMOVE_ITEM = "KEY_AUTO_REMOVE_ITEM";
+
             @Override
             public TableRow<SaleItem> call(TableView<SaleItem> tableView) {
                 final TableRow<SaleItem> row = new TableRow<>();
                 final ContextMenu contextMenu = new ContextMenu();
-                final MenuItem removeMenuItem = new MenuItem("Remove");
+                final String sRemoveFromWatchlist =  "Remove from watchlist";
+                final MenuItem removeMenuItem = new MenuItem( sRemoveFromWatchlist );
+
+                // right-click selects the row and display selected item in browser
+                row.setOnMouseClicked(event -> {
+                   if (event.getButton().equals(MouseButton.PRIMARY)) {
+                       rootLayoutController.showItemBrowserPage(row.getItem().getItemID());
+                   }
+                });
+
+                // don't select (highlight) the row if it is right-clicked
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                    if (event.getButton().equals(MouseButton.SECONDARY)) {
+                        event.consume();
+                    }
+                });
 
                 //todo: pop up confirmation with checkbox option and hook up to preferences to remember choice
                 // also when confirmed, not only row removed but data in db removed
-                removeMenuItem.setOnAction(event -> saleItemTable.getItems().remove(row.getItem()));
+                removeMenuItem.setOnAction(event -> {
+                    Alert alert = createAlertWithOptOut(Alert.AlertType.CONFIRMATION, sRemoveFromWatchlist,
+                            null, "Are you sure you wish to remove this item from the watchlist?",
+                            "Do not ask again",
+                            param -> prefs.put(KEY_AUTO_REMOVE_ITEM, param ? "Always" : "Never"),
+                            ButtonType.YES, ButtonType.NO);
+
+                    if (alert.showAndWait().filter(t -> t == ButtonType.YES).isPresent()) {
+                        saleItemTable.getItems().remove(row.getItem());
+                    }
+                });
+
                 contextMenu.getItems().add(removeMenuItem);
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:
                 row.contextMenuProperty().bind(
