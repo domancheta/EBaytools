@@ -4,10 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
@@ -32,9 +29,9 @@ public class SalesItemsViewController {
     private TableColumn<SaleItem, String> sellerColumn;
 
     /**
-     * The data as an observable list of Persons.
+     * The data as an observable list of sale items.
      */
-    private ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
+    private final ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
 
     private Database db;
 
@@ -49,7 +46,7 @@ public class SalesItemsViewController {
         column.setCellFactory(c -> {
             TableCell<SaleItem, T> cell = existingCellFactory.call(c);
 
-            Tooltip tooltip = new Tooltip();
+            final Tooltip tooltip = new Tooltip();
             // can use arbitrary binding here to make text depend on cell
             // in any way you need:
             tooltip.textProperty().bind(cell.itemProperty().asString());
@@ -63,23 +60,46 @@ public class SalesItemsViewController {
 
     @FXML
     private void initialize() {
-       itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
-       titleColumn.setCellValueFactory(celldata -> celldata.getValue().titleProperty());
-       priceColumn.setCellValueFactory(celldata -> Bindings.format("%.2f", celldata.getValue().priceProperty()));
-       startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
-       endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
-       sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
+        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
+        titleColumn.setCellValueFactory(celldata -> celldata.getValue().titleProperty());
+        priceColumn.setCellValueFactory(celldata -> Bindings.format("%.2f", celldata.getValue().priceProperty()));
+        startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
+        endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
+        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
 
-       saleItemTable.setItems(saleItemData);
+        saleItemTable.setItems(saleItemData);
 
-       saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
+        // show tooltips for cell items
+        saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
 
-       // display selected row in browser
-       saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                   if (newSelection != null) {
-                     rootLayoutController.showItemBrowserPage(newSelection.getItemID());
-                   }
-               } );
+        // add action to display selected row in browser
+        saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                rootLayoutController.showItemBrowserPage(newSelection.getItemID());
+            }
+        } );
+
+        // context menu popup binding and actions
+        saleItemTable.setRowFactory(new Callback<TableView<SaleItem>, TableRow<SaleItem>>() {
+            @Override
+            public TableRow<SaleItem> call(TableView<SaleItem> tableView) {
+                final TableRow<SaleItem> row = new TableRow<>();
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem removeMenuItem = new MenuItem("Remove");
+
+                //todo: pop up confirmation with checkbox option and hook up to preferences to remember choice
+                // also when confirmed, not only row removed but data in db removed
+                removeMenuItem.setOnAction(event -> saleItemTable.getItems().remove(row.getItem()));
+                contextMenu.getItems().add(removeMenuItem);
+                // Set context menu on row, but use a binding to make it only show for non-empty rows:
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                                .then((ContextMenu)null)
+                                .otherwise(contextMenu)
+                );
+                return row ;
+            }
+        });
     }
 
     public void addItemToSalesList(SaleItem saleItem) {
