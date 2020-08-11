@@ -63,7 +63,7 @@ public class SQLiteDB implements Database{
                 } while (rs.next());
             }
             else {
-                System.out.println("Table " + mainTableName + " doesn't existing.  Initializing db...");
+                System.out.println("Table " + mainTableName + " doesn't exist.  Creating it...");
 
                 String qMainTableCreate = "create table " + mainTableName + "(" + cItemID + " PRIMARY KEY," +
                         cTitle + ", " + cDescription + ", " + cSellerInfo + ", " + cPrice + " INTEGER, " +
@@ -78,17 +78,17 @@ public class SQLiteDB implements Database{
     }
 
     private void createPreparedStatements() {
-        System.out.println("Creating prepared statments...");
+        System.out.println("Initializing DB prepared statements...");
         try {
             sthSelectAllSalesItems = conn.prepareStatement("SELECT * FROM " + mainTableName);
             sthSelectSalesItem = conn.prepareStatement("SELECT * FROM " + mainTableName + " WHERE itemID = ?");
             stInsertSalesItem = conn.prepareStatement("INSERT OR REPLACE INTO " + mainTableName
                                 + " VALUES(?, ?, ?, ?, ?, ?, ?)");
             sthDeleteSalesItem = conn.prepareStatement("DELETE FROM " + mainTableName + " WHERE itemID = ?");
+            System.out.println("Prepared statements created successfully...");
         } catch (SQLException se) {
             System.err.println(se.getMessage());
         }
-
     }
 
     public Connection getConnection() {
