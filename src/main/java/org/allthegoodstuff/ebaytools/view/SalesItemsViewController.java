@@ -67,7 +67,7 @@ public class SalesItemsViewController {
         });
     }
 
-    // Alert dialog with option to not ask to delete (or any other action) again
+    // Confirmation alert dialog with option to not ask to confirm action (i.e. delete item) again
     public static Alert createAlertWithOptOut(Alert.AlertType type, String title, String headerText,
                                               String message, String optOutMessage, Consumer<Boolean> optOutAction,
                                               ButtonType... buttonTypes) {
@@ -112,7 +112,7 @@ public class SalesItemsViewController {
         saleItemTable.setItems(saleItemData);
 
         // show tooltips for cell items
-        saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
+        //saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
 
         // context menu popup binding and actions
         saleItemTable.setRowFactory(new Callback<TableView<SaleItem>, TableRow<SaleItem>>() {
@@ -140,17 +140,26 @@ public class SalesItemsViewController {
                     }
                 });
 
-                //todo: pop up confirmation with checkbox option and hook up to preferences to remember choice
-                // also when confirmed, not only row removed but data in db removed
+                // Remove watchlist item from table and DB
+                // Pop up confirmation menu item with checkbox option to not ask anymore
+                //todo: add preference menu item with ability to enable confirm popup again
                 removeMenuItem.setOnAction(event -> {
+                    if (prefs.get(KEY_AUTO_REMOVE_ITEM, "").equals("Always")) {
+                        saleItemTable.getItems().remove(row.getItem());
+                        db.deleteSaleItemRow(row.getItem().getItemID());
+                        return;
+                    }
+
                     Alert alert = createAlertWithOptOut(Alert.AlertType.CONFIRMATION, sRemoveFromWatchlist,
                             null, "Are you sure you wish to remove this item from the watchlist?",
                             "Do not ask again",
                             param -> prefs.put(KEY_AUTO_REMOVE_ITEM, param ? "Always" : "Never"),
                             ButtonType.YES, ButtonType.NO);
 
+
                     if (alert.showAndWait().filter(t -> t == ButtonType.YES).isPresent()) {
                         saleItemTable.getItems().remove(row.getItem());
+                        db.deleteSaleItemRow(row.getItem().getItemID());
                     }
                 });
 
