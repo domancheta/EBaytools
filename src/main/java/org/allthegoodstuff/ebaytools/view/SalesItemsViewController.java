@@ -114,7 +114,14 @@ public class SalesItemsViewController {
         // show tooltips for cell items
         //saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
 
-        // context menu popup binding and actions
+        // add action to display selected row in browser
+        saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                rootLayoutController.showItemBrowserPage(newSelection.getItemID());
+            }
+        } );
+
+        // sales item table row action bindings here
         saleItemTable.setRowFactory(new Callback<TableView<SaleItem>, TableRow<SaleItem>>() {
 
             private final String KEY_AUTO_REMOVE_ITEM = "KEY_AUTO_REMOVE_ITEM";
@@ -125,13 +132,6 @@ public class SalesItemsViewController {
                 final ContextMenu contextMenu = new ContextMenu();
                 final String sRemoveFromWatchlist =  "Remove from watchlist";
                 final MenuItem removeMenuItem = new MenuItem( sRemoveFromWatchlist );
-
-                // right-click selects the row and display selected item in browser
-                row.setOnMouseClicked(event -> {
-                   if (event.getButton().equals(MouseButton.PRIMARY)) {
-                       rootLayoutController.showItemBrowserPage(row.getItem().getItemID());
-                   }
-                });
 
                 // don't select (highlight) the row if it is right-clicked
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
