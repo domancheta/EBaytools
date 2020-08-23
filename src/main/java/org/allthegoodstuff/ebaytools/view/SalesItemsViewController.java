@@ -117,6 +117,7 @@ public class SalesItemsViewController {
         // add action to display selected row in browser
         saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                rootLayoutController.hideAddWatchlistButton();
                 rootLayoutController.showItemBrowserPage(newSelection.getItemID());
             }
         } );

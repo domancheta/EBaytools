@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -31,9 +32,14 @@ public class RootLayoutController {
     @FXML
     private ProgressIndicator progressCircle;
 
+    @FXML
+    private Button watchlistButton;
+
     private FetchItemService fetchItemService;
 
     private SalesItemsViewController salesItemsViewController;
+
+    private boolean itemAddable = false;
 
     @FXML
     private void initialize() {
@@ -41,34 +47,16 @@ public class RootLayoutController {
 
         fetchItemService = new FetchItemService();
 
-        // search textfield handler
-        searchText.setOnAction((event) -> {
-            if (salesItemsViewController.itemExists(searchText.getText())) {
-                return;
-            }
-
-            if (searchText.getText().isBlank())
-                return;
-
-            showItemBrowserPage(searchText.getText());
-
-            try {
-                fetchItemService.restart();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
         // bind browser view to a progress circle animation which appears only when loading
-        progressCircle.setVisible(false);
         browserEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
                        if (newState == Worker.State.SUCCEEDED) {
                            // hide progress indicator when page is ready
                            progressCircle.setVisible(false);
+                           if (itemAddable)
+                                showAddWatchlistButton();
                        }
-
-        } );
+        });
 
     }
 
@@ -83,11 +71,20 @@ public class RootLayoutController {
         browser.getEngine().loadContent(html) ;
     }
 
+    public void showAddWatchlistButton() {
+        watchlistButton.setVisible(true);
+    }
+
+    public void hideAddWatchlistButton() {
+        itemAddable = false;
+        watchlistButton.setVisible(false);
+    }
+
     public AnchorPane getSalesListPane() {
         return SalesListPane;
     }
 
-    // TODO: add fetched item info with JSON parser to the observable sales list
+    // add fetched item info with JSON parser to the observable sales list
     private class FetchItemService extends Service<Void> {
 
         @Override
@@ -100,6 +97,7 @@ public class RootLayoutController {
                         SaleItem newSaleItem = ShoppingItemFetcher.getSingleItem(searchText.getText());
                         salesItemsViewController.addItemToSalesList(newSaleItem);
                         searchText.clear();
+                        hideAddWatchlistButton();
                     return null;
                 }
             };
@@ -117,6 +115,33 @@ public class RootLayoutController {
 
     public void setSalesItemsViewController(SalesItemsViewController salesItemsViewController) {
        this.salesItemsViewController = salesItemsViewController;
+    }
+
+    @FXML
+    private void searchItem() {
+        if (salesItemsViewController.itemExists(searchText.getText())) {
+            return;
+        }
+
+        if (searchText.getText().trim().isBlank()) {
+            searchText.clear();
+            return;
+        }
+
+        // show watchlist button once page loads if item is not in watchlist
+        itemAddable = true;
+        showItemBrowserPage(searchText.getText());
+    }
+
+    @FXML
+    public void addToWatchlist() {
+        //todo: fix up coloring on button; also add little animation once clicked
+        try {
+            fetchItemService.restart();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
