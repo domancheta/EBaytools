@@ -6,8 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.allthegoodstuff.ebaytools.db.Database;
-import org.allthegoodstuff.ebaytools.db.SQLiteDB;
+import org.allthegoodstuff.ebaytools.db.*;
 import org.allthegoodstuff.ebaytools.view.RootLayoutController;
 import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
 
@@ -22,9 +21,7 @@ public class EBayToolsMain extends Application {
     final private Database db;
 
     public EBayToolsMain() {
-        // local db singleton allowing only one connection during app lifetime
-        // todo: use a DI framework
-        db = SQLiteDB.getInstance();
+        db = DaggerDatabaseFactory.create().database();
     }
 
     @Override

@@ -2,6 +2,8 @@ package org.allthegoodstuff.ebaytools.db;
 
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -24,16 +26,9 @@ public class SQLiteDB implements Database{
     private static PreparedStatement stInsertSalesItem;
     private static PreparedStatement sthDeleteSalesItem;
 
-    // allow only one db connection
-    private static SQLiteDB instance = null;
-    public static Database getInstance() {
-        if (instance == null) {
-            instance = new SQLiteDB();
-        }
-        return instance;
-    }
 
-    private SQLiteDB () {
+    @Inject
+    public SQLiteDB () {
         try {
             conn = DriverManager.getConnection( dbDriverName);
         }
@@ -211,6 +206,7 @@ public class SQLiteDB implements Database{
     public void shutdown() {
         try {
             conn.close();
+            System.out.println("Successfully shutdown DB connection");
         } catch (SQLException se) {
             System.err.println(se.getMessage());
         }

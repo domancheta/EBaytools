@@ -1,7 +1,6 @@
 package org.allthegoodstuff.ebaytools;
 
-import org.allthegoodstuff.ebaytools.db.Database;
-import org.allthegoodstuff.ebaytools.db.SQLiteDB;
+import org.allthegoodstuff.ebaytools.db.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 public class DatabaseTest {
     @Test
     public void createdTablesTest () {
-        Database db = SQLiteDB.getInstance();
+        Database db = DaggerDatabaseFactory.create().database();
         Statement s = db.getStatement();
         try {
             Assertions.assertEquals(true, s.execute("select * from sale_items"));
@@ -28,7 +27,7 @@ public class DatabaseTest {
 
     @Test
     public void insertRowTest() {
-        Database db = SQLiteDB.getInstance();
+        Database db = DaggerDatabaseFactory.create().database();
 
         String testid = "345678";
 
@@ -44,4 +43,5 @@ public class DatabaseTest {
 
         }
     }
+
 }

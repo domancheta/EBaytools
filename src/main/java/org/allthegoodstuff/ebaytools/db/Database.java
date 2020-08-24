@@ -2,11 +2,13 @@ package org.allthegoodstuff.ebaytools.db;
 
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+@Singleton
 public interface Database {
 
     public Connection getConnection();
