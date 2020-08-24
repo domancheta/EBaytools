@@ -3,7 +3,6 @@ package org.allthegoodstuff.ebaytools.db;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
