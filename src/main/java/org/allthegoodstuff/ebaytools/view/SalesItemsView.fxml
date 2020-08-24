@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SalesItemsViewController"
-            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-    <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Tab text="Watch">
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-                <TableView fx:id="saleItemTable" layoutX="70.0" layoutY="36.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columns>
-                        <TableColumn fx:id="itemIDColumn" text="Item ID" />
-                        <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Item Title" />
-                        <TableColumn fx:id="priceColumn" text="Price" />
-                        <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
-                        <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End Time" />
-                        <TableColumn fx:id="sellerColumn" prefWidth="75.0" text="Seller" />
-                        <TableColumn prefWidth="75.0" text="Image" />
-                    </columns>
-                </TableView>
-            </AnchorPane>
-        </Tab>
-        <Tab text="Database">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-        </Tab>
-    </TabPane>
+<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SalesItemsViewController">
+       <TableView fx:id="saleItemTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <columns>
+               <TableColumn fx:id="itemIDColumn" text="Item ID" />
+               <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Item Title" />
+               <TableColumn fx:id="priceColumn" text="Price" />
+               <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
+               <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End Time" />
+               <TableColumn fx:id="sellerColumn" prefWidth="75.0" text="Seller" />
+               <TableColumn prefWidth="75.0" text="Image" />
+           </columns>
+       </TableView>
 </AnchorPane>
