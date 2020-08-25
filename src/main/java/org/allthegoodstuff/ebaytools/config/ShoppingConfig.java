@@ -1,5 +1,8 @@
 package org.allthegoodstuff.ebaytools.config;
 
+import javax.inject.Singleton;
+
+@Singleton
 public interface ShoppingConfig {
 
     // property strings to be used to build out fetch API URIs

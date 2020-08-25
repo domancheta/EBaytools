@@ -1,6 +1,6 @@
 package org.allthegoodstuff.ebaytools;
 
-import org.allthegoodstuff.ebaytools.config.Cfg4JShoppingConfig;
+import org.allthegoodstuff.ebaytools.config.DaggerShoppingConfigFactory;
 import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 
 public class ShoppingAPIUriBuilder {
@@ -8,7 +8,7 @@ public class ShoppingAPIUriBuilder {
     private static ShoppingConfig shoppingConfig;
 
     static {
-        shoppingConfig = new Cfg4JShoppingConfig();
+        shoppingConfig = DaggerShoppingConfigFactory.create().configSettings();
     }
 
     public static String getSingleItemURI (String itemID) {

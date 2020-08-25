@@ -8,15 +8,17 @@ import org.cfg4j.source.context.environment.ImmutableEnvironment;
 import org.cfg4j.source.context.filesprovider.ConfigFilesProvider;
 import org.cfg4j.source.files.FilesConfigurationSource;
 
+import javax.inject.Inject;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class Cfg4JShoppingConfig implements ShoppingConfig {
 
-    private static ConfigurationProvider configProvider;
+    private ConfigurationProvider configProvider;
 
-    static {
-        // TODO: probably move config file somewhere in class structure and use the classpath provider instead
+    @Inject
+    public Cfg4JShoppingConfig() {
+        // TODO: probably move config file somewhere in class structure and use the Cfg4j classpath provider instead
         ConfigFilesProvider configFilesProvider = () -> Arrays.asList(Paths.get("config.yaml"));
         ConfigurationSource configSource = new FilesConfigurationSource(configFilesProvider);
         Environment env = new ImmutableEnvironment(".");
@@ -28,9 +30,7 @@ public class Cfg4JShoppingConfig implements ShoppingConfig {
         //todo: no exception thrown if the yaml is invalid, e.g., just adding ebay by itself in a line with no colon
         // I think the code is just returning and breaks the builder, and line to fetch the item isn't reached
         // can try putting in a validator if they don't fix this - there is a kwalify yaml validator out there
-    }
 
-    public Cfg4JShoppingConfig() {
     }
 
     public String baseApiUri() {
@@ -69,6 +69,5 @@ public class Cfg4JShoppingConfig implements ShoppingConfig {
     public String getProperty(String key) {
         return configProvider.getProperty(key, String.class);
     }
-
 
 }
