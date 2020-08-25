@@ -129,6 +129,7 @@ public class RootLayoutController {
         }
 
         // show watchlist button once page loads if item is not in watchlist
+        // TODO: do not show watchlist button if the item displayed is not valid or response error (see return from ebay)
         itemAddable = true;
         showItemBrowserPage(searchText.getText());
     }
