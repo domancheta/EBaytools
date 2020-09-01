@@ -48,7 +48,7 @@ public class EBayToolsMain extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(EBayToolsMain.class
                     .getResource("view/RootLayout.fxml"));
 
-            rootLayout = (VBox) fxmlLoader.load();
+            rootLayout = fxmlLoader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
@@ -74,7 +74,7 @@ public class EBayToolsMain extends Application {
             // Load sales item view.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(EBayToolsMain.class.getResource("view/SalesItemsView.fxml"));
-            AnchorPane salesItemsView = (AnchorPane) loader.load();
+            AnchorPane salesItemsView = loader.load();
 
             // Set sales list view into the location of the layout
             rootLayoutController.getSalesListPane().getChildren().add(salesItemsView);
