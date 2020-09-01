@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
+import org.allthegoodstuff.ebaytools.FetchResult;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
@@ -46,7 +47,6 @@ public class RootLayoutController {
         browserEngine = browser.getEngine();
 
         fetchItemService = new FetchItemService();
-
 
         // bind browser view to a progress circle animation which appears only when loading
         browserEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
@@ -94,8 +94,9 @@ public class RootLayoutController {
                 protected Void call() throws Exception{
                         // TODO: review validity of handling search textfield in the task
                         // TODO: should asynchronous version of http call be used?
-                        SaleItem newSaleItem = ShoppingItemFetcher.getSingleItem(searchText.getText());
-                        salesItemsViewController.addItemToSalesList(newSaleItem);
+                    FetchResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
+                    if (result.fetchSucceeded())
+                        salesItemsViewController.addItemToSalesList(result.getSaleItem());
                         searchText.clear();
                         hideAddWatchlistButton();
                     return null;

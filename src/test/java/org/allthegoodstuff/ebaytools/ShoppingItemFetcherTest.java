@@ -11,32 +11,55 @@ class ShoppingItemFetcherTest {
     @Test
     void getSingleAuctionItemTest() {
         String itemID = "402323900275";
-        String rs;
+        FetchResult rs;
 
         try {
-            SaleItem si = ShoppingItemFetcher.getSingleItem(itemID);
+            rs = ShoppingItemFetcher.getSingleItem(itemID);
 
-            Assertions.assertEquals(itemID, si.getItemID());
+            Assertions.assertEquals(true,  rs.fetchSucceeded());
+            Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
         }
         catch (Exception e) {
-            System.err.println("Exception thrown: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @Test
     void getSingleAuctionItemBidsTest() {
         String itemID = "264787227715";
-        String rs;
+        FetchResult rs;
 
         try {
-            SaleItem si = ShoppingItemFetcher.getSingleItem(itemID);
-
-            Assertions.assertEquals(itemID, si.getItemID());
+            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            Assertions.assertEquals(true,  rs.fetchSucceeded());
+            Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
         }
         catch (Exception e) {
-            System.err.println("Exception thrown: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
+    @Test
+    void invalidItemTest() {
+        String itemID = "invalid";
+        FetchResult rs;
+
+        try {
+            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            Assertions.assertEquals(false,  rs.fetchSucceeded());
+            Assertions.assertNull(rs.getSaleItem());
+            Assertions.assertNotNull(rs.getErrorMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // TODO: need to mock out scenario for a few non-200  responses
+    //  page not found test
+    //  server error test
+    //  bad connection test
+
 
     @Test
     void getSingleItemAsyncTest() {
@@ -49,7 +72,7 @@ class ShoppingItemFetcherTest {
             Assertions.assertEquals(true, rs.get().contains("\"ItemID\":\"" + itemID + "\""));
         }
         catch (Exception e) {
-            System.err.println("Exception thrown: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
