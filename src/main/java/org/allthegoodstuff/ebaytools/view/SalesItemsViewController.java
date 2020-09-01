@@ -119,6 +119,7 @@ public class SalesItemsViewController {
             if (newSelection != null) {
                 rootLayoutController.hideAddWatchlistButton();
                 rootLayoutController.showItemBrowserPage(newSelection.getItemID());
+                rootLayoutController.hideErrorPane();
             }
         } );
 

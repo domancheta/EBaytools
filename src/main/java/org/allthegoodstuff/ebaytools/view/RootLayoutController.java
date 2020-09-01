@@ -6,9 +6,11 @@ import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
@@ -36,6 +38,12 @@ public class RootLayoutController {
     @FXML
     private Button watchlistButton;
 
+    @FXML
+    private GridPane errorPane;
+
+    @FXML
+    private Label errorText;
+
     private FetchItemService fetchItemService;
 
     private SalesItemsViewController salesItemsViewController;
@@ -48,6 +56,9 @@ public class RootLayoutController {
         browserEngine = browser.getEngine();
 
         fetchItemService = new FetchItemService();
+
+        // bind the error label to what the service
+        errorText.textProperty().bind(fetchItemService.messageProperty());
 
         // bind browser view to a progress circle animation which appears only when loading
         browserEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
@@ -82,6 +93,14 @@ public class RootLayoutController {
         watchlistButton.setVisible(false);
     }
 
+    public void showErrorPane() {
+        errorPane.setVisible(true);
+    }
+
+    public void hideErrorPane() {
+        errorPane.setVisible(false);
+    }
+
     public AnchorPane getSalesListPane() {
         return SalesListPane;
     }
@@ -98,12 +117,19 @@ public class RootLayoutController {
                     // TODO: should asynchronous version of http call be used?
                     FetchResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
                     if (result.fetchSucceeded()) {
+                        errorPane.setVisible(false);
                         candidateWatchlistSaleItem = result.getSaleItem();
                         // TODO: do not show watchlist button if the item displayed is not valid or response error (see return from ebay)
                         itemAddable = true;
+                        hideErrorPane();
+                        //todo: should use other mechanism to indicate error rather than flags
                     }
-                    else itemAddable = false;
-                    // todo: else display the error stackframe (do what to browser after dismissing error?)
+                    else {
+                        // todo: display the error stackframe (do what to browser after dismissing error?)
+                        updateMessage(result.getErrorMessage());
+                        showErrorPane();
+                        itemAddable = false;
+                    }
 
                     return null;
                 }
@@ -137,12 +163,12 @@ public class RootLayoutController {
 
         try {
             fetchItemService.restart();
+            //todo: shouldn't show browser page if error on item fetch occurs
             showItemBrowserPage(searchText.getText());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML
