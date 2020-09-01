@@ -16,7 +16,7 @@ class ShoppingItemFetcherTest {
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);
 
-            Assertions.assertEquals(true,  rs.fetchSucceeded());
+            Assertions.assertTrue(rs.fetchSucceeded());
             Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
         }
         catch (Exception e) {
@@ -31,7 +31,7 @@ class ShoppingItemFetcherTest {
 
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);
-            Assertions.assertEquals(true,  rs.fetchSucceeded());
+            Assertions.assertTrue(rs.fetchSucceeded());
             Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
         }
         catch (Exception e) {
@@ -46,7 +46,7 @@ class ShoppingItemFetcherTest {
 
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);
-            Assertions.assertEquals(false,  rs.fetchSucceeded());
+            Assertions.assertFalse(rs.fetchSucceeded());
             Assertions.assertNull(rs.getSaleItem());
             Assertions.assertNotNull(rs.getErrorMessage());
         }
@@ -55,13 +55,18 @@ class ShoppingItemFetcherTest {
         }
     }
 
-    // TODO: need to mock out scenario for a few non-200  responses
+    // TODO: need to mock out scenario for a few non-200 responses
+    //  will have to override what is set within config file
     //  page not found test
     //  server error test
     //  bad connection test
 
+    // todo: add test for identifying expired sale items, i.e.,
+
 
     @Test
+    // todo: convert following to follow format of synchronized format.
+    //  call common code in separate private function
     void getSingleItemAsyncTest() {
         String itemID = "402323900275";
         CompletableFuture<String> rs;
