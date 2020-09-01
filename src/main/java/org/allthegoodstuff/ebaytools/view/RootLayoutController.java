@@ -57,7 +57,7 @@ public class RootLayoutController {
 
         fetchItemService = new FetchItemService();
 
-        // bind the error label to what the service
+        // bind the error label to fetch service message
         errorText.textProperty().bind(fetchItemService.messageProperty());
 
         // bind browser view to a progress circle animation which appears only when loading
@@ -119,13 +119,13 @@ public class RootLayoutController {
                     if (result.fetchSucceeded()) {
                         errorPane.setVisible(false);
                         candidateWatchlistSaleItem = result.getSaleItem();
-                        // TODO: do not show watchlist button if the item displayed is not valid or response error (see return from ebay)
+                        // flag to show watchlist button if the item entered is valid
                         itemAddable = true;
                         hideErrorPane();
-                        //todo: should use other mechanism to indicate error rather than flags
                     }
                     else {
-                        // todo: display the error stackframe (do what to browser after dismissing error?)
+                        // display the error stackframe (do what to browser after dismissing error?)
+                        // todo: add close button somewhere near error message whose click event hides the error pane
                         updateMessage(result.getErrorMessage());
                         showErrorPane();
                         itemAddable = false;
@@ -163,7 +163,7 @@ public class RootLayoutController {
 
         try {
             fetchItemService.restart();
-            //todo: shouldn't show browser page if error on item fetch occurs
+            //todo: shouldn't show browser page if error on item fetch occurs - wasted cpu cycles
             showItemBrowserPage(searchText.getText());
         }
         catch (Exception e) {
