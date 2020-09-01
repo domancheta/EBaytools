@@ -13,14 +13,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
-/*TODO: Fields from the item are retrieved on the perl app:
-        itemID
-        EndTime
-        itemTitle
-        image URLs ( There's a gallery url and list of picture urls being returned in api)
-        item description - appears in api with extra params
-        shipping info (multiple fields)
-        -
+/*TODO: More fields to be retrieved - using perl app as reference:
+        - image URLs ( There's a gallery url and list of picture urls being returned in api)
+        - shipping info (multiple fields)
         bid amount (one of) - in model, this is currentPrice:
         - current bid
         - winning bid
@@ -29,15 +24,14 @@ import java.util.concurrent.CompletableFuture;
         highest bidder (one of):
         - high bidder
         - winning bidder
-        - seller
 */
 
+// todo: make ShoppingItemFetcher an interface and make implemented class - ebayItemFetcher
 public class ShoppingItemFetcher {
 
     private final static DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    // TODO: synchronous get call - use asynchronous instead?
     public static FetchResult getSingleItem(String itemID) throws Exception {
 
         String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
