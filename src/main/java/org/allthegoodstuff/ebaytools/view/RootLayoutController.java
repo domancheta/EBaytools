@@ -41,6 +41,7 @@ public class RootLayoutController {
     private SalesItemsViewController salesItemsViewController;
 
     private boolean itemAddable = false;
+    private SaleItem candidateWatchlistSaleItem;
 
     @FXML
     private void initialize() {
@@ -55,9 +56,10 @@ public class RootLayoutController {
                            progressCircle.setVisible(false);
                            if (itemAddable)
                                 showAddWatchlistButton();
+                           else
+                               hideAddWatchlistButton();
                        }
         });
-
     }
 
     public void showItemBrowserPage (String itemID) {
@@ -92,13 +94,17 @@ public class RootLayoutController {
             return new Task<>() {
                 @Override
                 protected Void call() throws Exception{
-                        // TODO: review validity of handling search textfield in the task
-                        // TODO: should asynchronous version of http call be used?
+                    // TODO: review validity of handling search textfield in the task
+                    // TODO: should asynchronous version of http call be used?
                     FetchResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
-                    if (result.fetchSucceeded())
-                        salesItemsViewController.addItemToSalesList(result.getSaleItem());
-                        searchText.clear();
-                        hideAddWatchlistButton();
+                    if (result.fetchSucceeded()) {
+                        candidateWatchlistSaleItem = result.getSaleItem();
+                        // TODO: do not show watchlist button if the item displayed is not valid or response error (see return from ebay)
+                        itemAddable = true;
+                    }
+                    else itemAddable = false;
+                    // todo: else display the error stackframe (do what to browser after dismissing error?)
+
                     return null;
                 }
             };
@@ -129,21 +135,23 @@ public class RootLayoutController {
             return;
         }
 
-        // show watchlist button once page loads if item is not in watchlist
-        // TODO: do not show watchlist button if the item displayed is not valid or response error (see return from ebay)
-        itemAddable = true;
-        showItemBrowserPage(searchText.getText());
-    }
-
-    @FXML
-    public void addToWatchlist() {
-        //todo: fix up coloring on button; also add little animation once clicked
         try {
             fetchItemService.restart();
+            showItemBrowserPage(searchText.getText());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @FXML
+    public void addToWatchlist() {
+        // todo: fix up coloring on button; also add little animation once clicked
+        salesItemsViewController.addItemToSalesList(candidateWatchlistSaleItem);
+        //todo: should candidateWatchlistSaleItem be set to null?  does this cause inconsistency issues?
+        searchText.clear();
+        hideAddWatchlistButton();
     }
 
     @FXML
