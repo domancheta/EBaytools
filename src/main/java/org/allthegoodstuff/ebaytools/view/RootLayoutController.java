@@ -71,17 +71,18 @@ public class RootLayoutController {
                                hideAddWatchlistButton();
                        }
         });
+
     }
 
     public void showItemBrowserPage (String itemID) {
         String itemUrl = "https://www.ebay.com/itm/" + itemID;
         progressCircle.setVisible(true);
-        browser.getEngine().load(itemUrl);
+        browserEngine.load(itemUrl);
     }
 
     public void showHTMLInBrowser (String html) {
         progressCircle.setVisible(true);
-        browser.getEngine().loadContent(html) ;
+        browserEngine.loadContent(html) ;
     }
 
     public void showAddWatchlistButton() {
