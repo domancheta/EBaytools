@@ -48,6 +48,7 @@ public class RootLayoutController {
 
     private SalesItemsViewController salesItemsViewController;
 
+    // flag searched item as one addable to the watchlist
     private boolean itemAddable = false;
     private SaleItem candidateWatchlistSaleItem;
 
@@ -57,7 +58,7 @@ public class RootLayoutController {
 
         fetchItemService = new FetchItemService();
 
-        // bind the error label to fetch service message
+        // bind the error label to fetch service error message
         errorText.textProperty().bind(fetchItemService.messageProperty());
 
         // bind browser view to a progress circle animation which appears only when loading
@@ -164,8 +165,11 @@ public class RootLayoutController {
 
         try {
             fetchItemService.restart();
-            //todo: shouldn't show browser page if error on item fetch occurs - wasted cpu cycles
-            showItemBrowserPage(searchText.getText());
+            // show browser page only if successful item fetch occurs
+            fetchItemService.setOnSucceeded( e -> {
+                if (itemAddable)
+                    showItemBrowserPage(searchText.getText());
+            });
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -176,7 +180,7 @@ public class RootLayoutController {
     public void addToWatchlist() {
         // todo: fix up coloring on button; also add little animation once clicked
         salesItemsViewController.addItemToSalesList(candidateWatchlistSaleItem);
-        //todo: should candidateWatchlistSaleItem be set to null?  does this cause inconsistency issues?
+        candidateWatchlistSaleItem = null;
         searchText.clear();
         hideAddWatchlistButton();
     }
