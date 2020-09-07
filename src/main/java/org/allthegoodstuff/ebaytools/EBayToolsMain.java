@@ -20,6 +20,7 @@ public class EBayToolsMain extends Application {
     private VBox rootLayout;
     private RootLayoutController rootLayoutController;
     private SalesItemsViewController salesItemsViewController;
+    //todo: consider async logging for performant logging
     private final static Logger logger = LogManager.getLogger("GLOBAL");
     final private Database db;
 

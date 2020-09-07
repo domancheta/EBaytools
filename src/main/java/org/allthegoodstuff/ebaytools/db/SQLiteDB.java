@@ -1,6 +1,8 @@
 package org.allthegoodstuff.ebaytools.db;
 
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -15,6 +17,7 @@ public class SQLiteDB implements Database{
     // todo: retrieve following strings from config properties
     private String dbDriverName = "jdbc:sqlite:ebaytools.db";
     private String mainTableName = "sale_items";
+    private final static Logger logger = LogManager.getLogger("GLOBAL");
 
     // main table column names
     private final static String cItemID = "itemId",  cTitle = "title", cDescription = "description",
@@ -33,7 +36,7 @@ public class SQLiteDB implements Database{
         }
         catch(SQLException se) {
             // todo: handle output of all sql exceptions.  should output to log as well
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
         validateMainTables();
         createPreparedStatements();
@@ -46,42 +49,42 @@ public class SQLiteDB implements Database{
             Statement createStatement = getStatement();
 
             // todo: need to emit these messages in log (INFO level)
-            System.out.println("Using DB driver " + metaData.getDriverName() + " version " + metaData.getDriverVersion());
+            logger.info("Using DB driver " + metaData.getDriverName() + " version " + metaData.getDriverVersion());
 
             // check existence of main table
             ResultSet rs = metaData.getTables(null, null, mainTableName, null );
             if (rs.next()) {
                 do {
                     if (rs.getString(3).equals(mainTableName))
-                        System.out.println("Using existing table " + mainTableName );
+                        logger.info("Using existing table " + mainTableName );
                 } while (rs.next());
             }
             else {
-                System.out.println("Table " + mainTableName + " doesn't exist.  Creating it...");
+                logger.info("Table " + mainTableName + " doesn't exist.  Creating it...");
 
                 String qMainTableCreate = "create table " + mainTableName + "(" + cItemID + " PRIMARY KEY," +
                         cTitle + ", " + cDescription + ", " + cSellerInfo + ", " + cPrice + " INTEGER, " +
                         cEndTime + ", " + cStartTime + ")";
                 if ( createStatement.execute( qMainTableCreate ) );
-                    System.out.println("Table " + mainTableName + " created successfully!");
+                    logger.info("Table " + mainTableName + " created successfully!");
             }
 
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
     }
 
     private void createPreparedStatements() {
-        System.out.println("Initializing DB prepared statements...");
+        logger.info("Initializing DB prepared statements...");
         try {
             sthSelectAllSalesItems = conn.prepareStatement("SELECT * FROM " + mainTableName);
             sthSelectSalesItem = conn.prepareStatement("SELECT * FROM " + mainTableName + " WHERE itemID = ?");
             stInsertSalesItem = conn.prepareStatement("INSERT OR REPLACE INTO " + mainTableName
                                 + " VALUES(?, ?, ?, ?, ?, ?, ?)");
             sthDeleteSalesItem = conn.prepareStatement("DELETE FROM " + mainTableName + " WHERE itemID = ?");
-            System.out.println("Prepared statements created successfully...");
+            logger.info("Prepared statements created successfully...");
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
     }
 
@@ -95,7 +98,7 @@ public class SQLiteDB implements Database{
         try {
             if (conn != null ) newStatement = conn.createStatement();
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
         return newStatement;
     }
@@ -117,7 +120,7 @@ public class SQLiteDB implements Database{
             return stInsertSalesItem.executeUpdate();
 
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
 
         return 0;
@@ -139,7 +142,7 @@ public class SQLiteDB implements Database{
             return stInsertSalesItem.executeUpdate();
 
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
 
         return 0;
@@ -151,7 +154,7 @@ public class SQLiteDB implements Database{
             sthDeleteSalesItem.setString(1, itemID);
             return sthDeleteSalesItem.executeUpdate();
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
 
         return 0;
@@ -179,7 +182,7 @@ public class SQLiteDB implements Database{
                 saleItems.add ( new SaleItem(itemId, title, description, sellerInfo, price, endTime, startTime ));
             }
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
 
         return saleItems;
@@ -190,7 +193,7 @@ public class SQLiteDB implements Database{
         try {
             return mS.execute(statement);
         } catch (SQLException se) {
-            System.err.println((se.getMessage()));
+            logger.error(se.getMessage());
             return false;
         }
     }
@@ -199,15 +202,15 @@ public class SQLiteDB implements Database{
         try {
             conn.commit();
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
     }
     public void shutdown() {
         try {
             conn.close();
-            System.out.println("Successfully shutdown DB connection");
+            logger.info("Successfully shutdown DB connection");
         } catch (SQLException se) {
-            System.err.println(se.getMessage());
+            logger.error(se.getMessage());
         }
     }
 
