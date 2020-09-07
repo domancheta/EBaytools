@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import org.allthegoodstuff.ebaytools.db.*;
 import org.allthegoodstuff.ebaytools.view.RootLayoutController;
 import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -18,6 +20,7 @@ public class EBayToolsMain extends Application {
     private VBox rootLayout;
     private RootLayoutController rootLayoutController;
     private SalesItemsViewController salesItemsViewController;
+    private final static Logger logger = LogManager.getLogger("GLOBAL");
     final private Database db;
 
     public EBayToolsMain() {
@@ -101,7 +104,7 @@ public class EBayToolsMain extends Application {
         // this is one of the last methods executed when the app exits
         // todo: find where else that the app may inadvertently exit and fail to close db connection
         db.shutdown();
-        System.out.println ("Exitted this wonderful app!  Have a nice day!");
+        logger.info("Exitted this wonderful app!  Have a nice day!");
     }
 
 
