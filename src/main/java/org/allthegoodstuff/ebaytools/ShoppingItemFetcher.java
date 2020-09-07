@@ -3,6 +3,8 @@ package org.allthegoodstuff.ebaytools;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -31,6 +33,7 @@ public class ShoppingItemFetcher {
 
     private final static DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private final static Logger logger = LogManager.getLogger("GLOBAL");
 
     public static FetchResult getSingleItem(String itemID) throws Exception {
 
@@ -60,13 +63,13 @@ public class ShoppingItemFetcher {
                 default -> "Unexpected HTTP response occurred";
             };
 
+            logger.error(errorMessage);
+            logger.error("response status code: " + response.statusCode() + "\n");
+            logger.error("response headers: " + response.headers() + "\n");
+
             return new FetchResult(FetchResult.Status.FAILED, errorMessage, null);
         }
 
-        System.out.println ("response status code: " + response.statusCode() + "\n");
-        System.out.println ("response headers: " + response.headers() + "\n");
-        System.out.println ("response body: " + response.body() + "\n");
-        System.out.println ("request url: " + response.request() + "\n");
 
         Any any = JsonIterator.deserialize(response.body());
 
@@ -80,6 +83,10 @@ public class ShoppingItemFetcher {
                 //TODO: is just the long message sufficient troubleshooting feedback ?
                 errorMessage = errMap.toString("LongMessage") + "\n" + errorMessage;
             }
+
+            logger.error(errorMessage);
+            logger.error("response body: " + response.body() + "\n");
+
             return new FetchResult(FetchResult.Status.FAILED, errorMessage, null);
         }
 
@@ -93,10 +100,15 @@ public class ShoppingItemFetcher {
                 LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
                 );
 
+        logger.trace("response headers: " + response.headers() + "\n");
+        logger.trace("response body: " + response.body() + "\n");
+        logger.trace("request url: " + response.request() + "\n");
+
         return new FetchResult(FetchResult.Status.SUCCEEDED, null, saleitem);
 
     }
 
+    //todo: convert following async call to conform to above synchronous call
     public static CompletableFuture<String> getSingleItemAsync(String itemID) {
         String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
 
