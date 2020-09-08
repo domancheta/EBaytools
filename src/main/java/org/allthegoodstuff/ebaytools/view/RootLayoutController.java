@@ -101,6 +101,7 @@ public class RootLayoutController {
 
     public void hideErrorPane() {
         errorPane.setVisible(false);
+        searchText.clear();
     }
 
     public AnchorPane getSalesListPane() {
