@@ -85,6 +85,7 @@ public class ShoppingItemFetcher {
             }
 
             logger.error(errorMessage);
+            logger.error("response request: " + response.request());
             logger.error("response body: " + response.body() + "\n");
 
             return new FetchResult(FetchResult.Status.FAILED, errorMessage, null);
