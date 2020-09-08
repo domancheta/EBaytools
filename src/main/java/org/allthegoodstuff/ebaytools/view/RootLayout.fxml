@@ -61,7 +61,7 @@
                         <Font name="Arial Black" size="13.0" />
                     </font>
                 </Button>
-                <GridPane fx:id="errorPane" style="-fx-background-color: #373e43;" stylesheets="@dark-theme.css" visible="false">
+                <GridPane fx:id="errorPane" onMouseClicked="#hideErrorPane" style="-fx-background-color: #373e43;" stylesheets="@dark-theme.css" visible="false">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
