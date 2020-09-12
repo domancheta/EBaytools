@@ -32,11 +32,4 @@ public final class FetchResult {
     public SaleItem getSaleItem() {
         return saleItem;
     }
-// error message
-//  if it's non-200, return error number plus an appropriate error message
-// see https://www.baeldung.com/rest-api-error-handling-best-practices#:~:text=The%20simplest%20way%20we%20handle,to%20authenticate%20with%20the%20server
-// if it's an item issue, return error message with the long message
-
-// if all goes well return SaleItem
-
 }
