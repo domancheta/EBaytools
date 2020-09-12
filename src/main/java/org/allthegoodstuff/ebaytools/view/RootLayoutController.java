@@ -124,7 +124,6 @@ public class RootLayoutController {
                         candidateWatchlistSaleItem = result.getSaleItem();
                         // flag to show watchlist button if the item entered is valid
                         itemAddable = true;
-                        hideErrorPane();
                     }
                     else {
                         // display the error stackframe (do what to browser after dismissing error?)
