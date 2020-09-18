@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_14">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -28,18 +28,18 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.junit.platform:junit-platform-engine:1.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.32.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:mac:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:14" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:mac:14" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:mac:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:15" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:mac:15" level="project" />
     <orderEntry type="library" name="Maven: com.jsoniter:jsoniter:0.9.23" level="project" />
     <orderEntry type="library" name="Maven: org.cfg4j:cfg4j-git:4.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jgit:org.eclipse.jgit:4.3.0.201604071810-r" level="project" />

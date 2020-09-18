@@ -35,7 +35,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="EBaytools" target="14" />
+      <module name="EBaytools" target="15" />
     </bytecodeTargetLevel>
   </component>
 </project>
