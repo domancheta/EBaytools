@@ -27,6 +27,14 @@
     -fx-text-fill: white;
 }
 
+.watchbutton{
+    -fx-background-color: indianred;
+}
+
+.watchbutton:hover{
+    -fx-background-color: tomato;
+}
+
 .separator *.line {
     -fx-background-color: #3C3C3C;
     -fx-border-style: solid;

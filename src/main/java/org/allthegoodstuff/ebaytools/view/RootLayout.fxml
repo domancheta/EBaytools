@@ -53,9 +53,9 @@
             <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <WebView fx:id="browser" layoutX="114.0" layoutY="55.0" prefHeight="-1.0" prefWidth="700.0" />
                 <ProgressIndicator fx:id="progressCircle" minHeight="150.0" minWidth="150.0" style="-fx-progress-color: royalblue;" visible="false" />
-                <Button fx:id="watchlistButton" mnemonicParsing="false" onAction="#addToWatchlist" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: indianred; " text="+ Watchlist" visible="false" StackPane.alignment="TOP_RIGHT">
+                <Button fx:id="watchlistButton" mnemonicParsing="false" onAction="#addToWatchlist" prefHeight="30.0" prefWidth="131.0" styleClass="watchbutton" text="+ Watchlist" visible="false" StackPane.alignment="TOP_RIGHT">
                     <StackPane.margin>
-                        <Insets right="10.0" top="5.0" />
+                        <Insets right="25.0" top="5.0" />
                     </StackPane.margin>
                     <font>
                         <Font name="Arial Black" size="13.0" />
