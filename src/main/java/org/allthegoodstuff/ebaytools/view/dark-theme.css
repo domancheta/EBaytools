@@ -35,6 +35,10 @@
     -fx-background-color: tomato;
 }
 
+.watchbutton:pressed{
+    -fx-background-color: mediumaquamarine;
+}
+
 .separator *.line {
     -fx-background-color: #3C3C3C;
     -fx-border-style: solid;
