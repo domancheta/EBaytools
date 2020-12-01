@@ -3,11 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.SingleSaleItemView">
+<AnchorPane fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-      <Label text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="75.0" />
-      <Label text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="5.0" />
-      <Label fx:id="itemSellerLabel" layoutX="437.0" layoutY="218.0" text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="75.0" />
+      <Label fx:id="labelTitle" text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <Label fx:id="labelPrice" text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="5.0" />
+      <Label fx:id="labelItemId" text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="75.0" />
+      <Label fx:id="labelSeller" layoutX="437.0" layoutY="218.0" text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="75.0" />
    </children>
 </AnchorPane>
