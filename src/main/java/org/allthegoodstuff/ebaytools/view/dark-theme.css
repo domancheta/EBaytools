@@ -63,6 +63,8 @@
     -fx-font-weight: none;
 }
 
+.column-header-background { visibility: hidden; -fx-padding: -1em; }
+
 .list-cell:even,
 .list-cell:odd,
 .table-row-cell:even,
