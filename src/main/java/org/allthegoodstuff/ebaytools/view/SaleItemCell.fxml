@@ -3,11 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label fx:id="labelTitle" text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-      <Label fx:id="labelPrice" text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="5.0" />
-      <Label fx:id="labelItemId" text="Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="75.0" />
-      <Label fx:id="labelSeller" layoutX="437.0" layoutY="218.0" text="Label" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="75.0" />
-   </children>
+<AnchorPane fx:id="anchorPane" prefHeight="100.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <Label fx:id="labelTitle" text="labelTitle" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+   <Label fx:id="labelPrice" layoutX="16.0" layoutY="33.0" text="labelPrice" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="40.0" />
+   <Label fx:id="labelItemId" text="labelID" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="75.0" />
+   <Label fx:id="labelSeller" layoutX="437.0" layoutY="218.0" text="labelSeller" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="75.0" />
 </AnchorPane>
