@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
@@ -17,6 +19,9 @@ import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.FetchResult;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class RootLayoutController {
 
@@ -44,6 +49,9 @@ public class RootLayoutController {
     @FXML
     private Label errorText;
 
+    @FXML
+    private ImageView logoImage;
+
     private FetchItemService fetchItemService;
 
     private SalesItemsViewController salesItemsViewController;
@@ -54,6 +62,18 @@ public class RootLayoutController {
 
     @FXML
     private void initialize() {
+
+        try {
+            FileInputStream input = new FileInputStream("src/main/resources/logo_200x200.png");
+            Image logo = new Image(input);
+            logoImage.setImage(logo);
+        } catch (IOException ie) {
+            System.err.println("Error loading image:");
+            ie.printStackTrace();
+        }
+
+        showErrorPane();
+
         browserEngine = browser.getEngine();
 
         fetchItemService = new FetchItemService();
