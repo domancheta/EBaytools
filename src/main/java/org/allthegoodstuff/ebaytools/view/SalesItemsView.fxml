@@ -9,6 +9,7 @@
                <TableColumn fx:id="itemIDColumn" text="Item ID" />
                <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Item Title" />
                <TableColumn fx:id="priceColumn" text="Price" />
+               <TableColumn fx:id="bidsColumn" prefWidth="75.0" text="Bids" />
                <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
                <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End Time" />
                <TableColumn fx:id="sellerColumn" prefWidth="75.0" text="Seller" />

@@ -22,7 +22,6 @@ import java.util.concurrent.CompletableFuture;
         - current bid
         - winning bid
         - start price
-        bid count
         highest bidder (one of):
         - high bidder
         - winning bidder
@@ -97,6 +96,7 @@ public class ShoppingItemFetcher {
                 any.toString("Item", "Description"),
                 any.toString("Item", "Seller", "UserID"),
                 any.toBigDecimal("Item", "CurrentPrice", "Value"),
+                any.toInt("Item", "BidCount"),
                 LocalDateTime.parse(any.toString("Item", "EndTime"), dateFormatter),
                 LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
                 );

@@ -1,9 +1,6 @@
 package org.allthegoodstuff.ebaytools.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,6 +18,7 @@ public class SaleItem {
     private final StringProperty description;
     private final StringProperty sellerInfo;
     private final ObjectProperty<BigDecimal> price;
+    private final IntegerProperty bids;
     private final ObjectProperty<LocalDateTime> endTime;
     private final ObjectProperty<LocalDateTime> startTime;
     // TODO: add properties for and add for db as well:
@@ -32,15 +30,16 @@ public class SaleItem {
     // seller
     // others?
 
-    public SaleItem(String itemID, String title, String description, String seller, BigDecimal price,
+    public SaleItem(String itemID, String title, String description, String seller, BigDecimal price, int bids,
                     LocalDateTime endTime, LocalDateTime startTime) {
         this.itemID = new SimpleStringProperty(itemID);
         this.title = new SimpleStringProperty(title);
         this.description = new SimpleStringProperty( description );
         this.sellerInfo = new SimpleStringProperty(seller);
         this.price = new SimpleObjectProperty<>(price);
-        this.endTime = new SimpleObjectProperty<LocalDateTime>(endTime);
-        this.startTime = new SimpleObjectProperty<LocalDateTime>(startTime);
+        this.bids = new SimpleIntegerProperty(bids);
+        this.endTime = new SimpleObjectProperty<>(endTime);
+        this.startTime = new SimpleObjectProperty<>(startTime);
     }
 
     public String getItemID() {
@@ -103,16 +102,16 @@ public class SaleItem {
         return price;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime.get();
+    public int getBids() {
+        return bids.get();
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime.set(endTime);
+    public void setBids(int bids) {
+        this.bids.set(bids);
     }
 
-    public ObjectProperty<LocalDateTime> endTimeProperty() {
-        return endTime;
+    public IntegerProperty bidsProperty() {
+        return bids;
     }
 
     public LocalDateTime getStartTime() {
@@ -126,4 +125,17 @@ public class SaleItem {
     public ObjectProperty<LocalDateTime> startTimeProperty() {
         return startTime;
     }
+
+    public LocalDateTime getEndTime() {
+        return endTime.get();
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime.set(endTime);
+    }
+
+    public ObjectProperty<LocalDateTime> endTimeProperty() {
+        return endTime;
+    }
+
 }
