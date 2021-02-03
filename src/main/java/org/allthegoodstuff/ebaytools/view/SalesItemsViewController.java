@@ -137,8 +137,15 @@ public class SalesItemsViewController {
                 final ContextMenu contextMenu = new ContextMenu();
                 final String sRemoveFromWatchlist =  "Remove from watchlist";
                 final MenuItem removeMenuItem = new MenuItem( sRemoveFromWatchlist );
+                Alert alert = createAlertWithOptOut(Alert.AlertType.CONFIRMATION, sRemoveFromWatchlist,
+                        null, "Are you sure you wish to remove this item from the watchlist?",
+                        "Do not ask again",
+                        param -> prefs.put(KEY_AUTO_REMOVE_ITEM, param ? "Always" : "Never"),
+                        ButtonType.YES, ButtonType.NO);
+                // todo: put this in the stylesheet file and retrieve somehow
+                final String rightSelectedStyle = "-fx-border-color: deepskyblue; -fx-border-width: 2px; -fx-border-style: solid; -fx-border-radius: 8px";
+                final String[] rowStyleBeforeRightClick = {""};
 
-                // don't select (highlight) the row if it is right-clicked
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
                     if (event.getButton().equals(MouseButton.SECONDARY)) {
                         event.consume();
@@ -155,20 +162,30 @@ public class SalesItemsViewController {
                         return;
                     }
 
-                    Alert alert = createAlertWithOptOut(Alert.AlertType.CONFIRMATION, sRemoveFromWatchlist,
-                            null, "Are you sure you wish to remove this item from the watchlist?",
-                            "Do not ask again",
-                            param -> prefs.put(KEY_AUTO_REMOVE_ITEM, param ? "Always" : "Never"),
-                            ButtonType.YES, ButtonType.NO);
-
-
                     if (alert.showAndWait().filter(t -> t == ButtonType.YES).isPresent()) {
                         saleItemTable.getItems().remove(row.getItem());
                         db.deleteSaleItemRow(row.getItem().getItemID());
                     }
+                    row.setStyle(rowStyleBeforeRightClick[0]);
                 });
 
                 contextMenu.getItems().add(removeMenuItem);
+
+                // special styling for right-clicked rows
+                contextMenu.setOnShowing(event -> {
+                  //row.getStyleClass().add("right-clicked-row");
+                  row.setStyle(rightSelectedStyle);
+                });
+
+                contextMenu.setOnHidden(event -> {
+                    if (prefs.get(KEY_AUTO_REMOVE_ITEM, "").equals("Always"))
+                        //row.getStyleClass().remove("right-clicked-row");
+                        row.setStyle(rowStyleBeforeRightClick[0]);
+                    else if (!alert.isShowing())
+                        row.setStyle(rowStyleBeforeRightClick[0]);
+                        //row.getStyleClass().remove("right-clicked-row");
+                });
+
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:
                 row.contextMenuProperty().bind(
                         Bindings.when(row.emptyProperty())
@@ -182,7 +199,6 @@ public class SalesItemsViewController {
 
     public void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
-        //todo: action to enter into database should be actually done on 'add to watchlist' button action event
         db.insertSaleItemRow(saleItem);
     }
 
