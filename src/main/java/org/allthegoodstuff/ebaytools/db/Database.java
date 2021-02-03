@@ -19,7 +19,7 @@ public interface Database {
 
     public int insertSaleItemRow (SaleItem saleItem);
     public int insertSaleItemRow (String itemID, String title, String description, String sellerInfo,
-                                  BigDecimal price, String endTime, String startTime);
+                                  BigDecimal price, int bids, String endTime, String startTime);
     public int deleteSaleItemRow (String itemID);
 
     public ArrayList<SaleItem> getAllSalesItemRows ();

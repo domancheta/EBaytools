@@ -21,7 +21,7 @@ public class SQLiteDB implements Database{
 
     // main table column names
     private final static String cItemID = "itemId",  cTitle = "title", cDescription = "description",
-    cSellerInfo = "sellerInfo", cPrice = "price", cEndTime = "endTime", cStartTime = "startTime";
+    cSellerInfo = "sellerInfo", cPrice = "price", cBids = "bids", cEndTime = "endTime", cStartTime = "startTime";
 
     private static PreparedStatement sthSelectAllSalesItems;
     private static PreparedStatement sthSelectSalesItem;
@@ -48,7 +48,6 @@ public class SQLiteDB implements Database{
             DatabaseMetaData metaData = conn.getMetaData();
             Statement createStatement = getStatement();
 
-            // todo: need to emit these messages in log (INFO level)
             logger.info("Using DB driver " + metaData.getDriverName() + " version " + metaData.getDriverVersion());
 
             // check existence of main table
@@ -64,7 +63,7 @@ public class SQLiteDB implements Database{
 
                 String qMainTableCreate = "create table " + mainTableName + "(" + cItemID + " PRIMARY KEY," +
                         cTitle + ", " + cDescription + ", " + cSellerInfo + ", " + cPrice + " INTEGER, " +
-                        cEndTime + ", " + cStartTime + ")";
+                        cBids + " INTEGER, " + cEndTime + ", " + cStartTime + ")";
                 if ( createStatement.execute( qMainTableCreate ) );
                     logger.info("Table " + mainTableName + " created successfully!");
             }
@@ -80,7 +79,7 @@ public class SQLiteDB implements Database{
             sthSelectAllSalesItems = conn.prepareStatement("SELECT * FROM " + mainTableName);
             sthSelectSalesItem = conn.prepareStatement("SELECT * FROM " + mainTableName + " WHERE itemID = ?");
             stInsertSalesItem = conn.prepareStatement("INSERT OR REPLACE INTO " + mainTableName
-                                + " VALUES(?, ?, ?, ?, ?, ?, ?)");
+                                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
             sthDeleteSalesItem = conn.prepareStatement("DELETE FROM " + mainTableName + " WHERE itemID = ?");
             logger.info("Prepared statements created successfully...");
         } catch (SQLException se) {
@@ -105,7 +104,7 @@ public class SQLiteDB implements Database{
 
 
     public int insertSaleItemRow (String itemID, String title, String description, String sellerInfo,
-                                  BigDecimal price, String endTime, String startTime) {
+                                  BigDecimal price, int bids, String endTime, String startTime) {
         try {
             stInsertSalesItem.setString(1, itemID);
             stInsertSalesItem.setString(2, title);
@@ -114,8 +113,9 @@ public class SQLiteDB implements Database{
             // convert big decimal to int
             int packedInt = price.scaleByPowerOfTen(4).intValue();
             stInsertSalesItem.setInt(5, packedInt);
-            stInsertSalesItem.setString(6, endTime);
-            stInsertSalesItem.setString(7, startTime);
+            stInsertSalesItem.setInt(6, bids);
+            stInsertSalesItem.setString(7, endTime);
+            stInsertSalesItem.setString(8, startTime);
 
             return stInsertSalesItem.executeUpdate();
 
@@ -136,8 +136,9 @@ public class SQLiteDB implements Database{
             // convert big decimal to int
             int packedInt = saleItem.getPrice().scaleByPowerOfTen(4).intValue();
             stInsertSalesItem.setInt(5, packedInt);
-            stInsertSalesItem.setString(6, saleItem.getEndTime().toString());
-            stInsertSalesItem.setString(7, saleItem.getStartTime().toString());
+            stInsertSalesItem.setInt(6, saleItem.getBids());
+            stInsertSalesItem.setString(7, saleItem.getEndTime().toString());
+            stInsertSalesItem.setString(8, saleItem.getStartTime().toString());
 
             return stInsertSalesItem.executeUpdate();
 
@@ -165,6 +166,7 @@ public class SQLiteDB implements Database{
 
         String itemId, title, description, sellerInfo;
         BigDecimal price;
+        int bids;
         LocalDateTime endTime, startTime;
 
         try {
@@ -176,10 +178,11 @@ public class SQLiteDB implements Database{
                 description = rs.getString(cDescription);
                 sellerInfo = rs.getString(cSellerInfo);
                 price = new BigDecimal(rs.getInt(cPrice)).scaleByPowerOfTen(-4);
+                bids = rs.getInt(cBids);
                 endTime = LocalDateTime.parse(rs.getString(cEndTime), DateTimeFormatter.ISO_DATE_TIME);
                 startTime = LocalDateTime.parse(rs.getString(cStartTime), DateTimeFormatter.ISO_DATE_TIME);
 
-                saleItems.add ( new SaleItem(itemId, title, description, sellerInfo, price, endTime, startTime ));
+                saleItems.add ( new SaleItem(itemId, title, description, sellerInfo, price, bids, endTime, startTime ));
             }
         } catch (SQLException se) {
             logger.error(se.getMessage());

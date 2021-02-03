@@ -34,7 +34,7 @@ public class DatabaseTest {
         try {
 
             int rows = db.insertSaleItemRow( testid, "another thing", "stuf stuff", "mr. sales",
-                    new BigDecimal(3.99), LocalDateTime.now().toString(), LocalDateTime.now().toString());
+                    new BigDecimal(3.99), 5,LocalDateTime.now().toString(), LocalDateTime.now().toString());
             Assertions.assertEquals(1, rows);
         }
         finally {
