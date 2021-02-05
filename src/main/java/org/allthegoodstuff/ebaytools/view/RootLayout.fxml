@@ -33,7 +33,7 @@
     <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
         <VBox SplitPane.resizableWithParent="false">
             <HBox>
-                <FontIcon iconColor="grey" iconLiteral="eli-search" iconSize="16">
+                <FontIcon iconColor="grey" iconLiteral="eli-search" iconSize="16" onMouseClicked="#searchItem">
                <HBox.margin>
                   <Insets bottom="5.0" left="3.0" right="3.0" top="9.0" />
                </HBox.margin></FontIcon>
