@@ -173,6 +173,7 @@ public class SalesItemsViewController {
 
                 // special styling for right-clicked rows
                 contextMenu.setOnShowing(event -> {
+                  rowStyleBeforeRightClick[0] = row.getStyle();
                   //row.getStyleClass().add("right-clicked-row");
                   row.setStyle(rightSelectedStyle);
                 });
