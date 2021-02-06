@@ -65,7 +65,7 @@ public class EBayToolsMain extends Application {
             primaryStage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class EBayToolsMain extends Application {
             salesItemsViewController.setDatabaseAccess(db);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

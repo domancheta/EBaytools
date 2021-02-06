@@ -19,12 +19,14 @@ import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.FetchResult;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class RootLayoutController {
-
+    private final static Logger logger = LogManager.getLogger("GLOBAL");
 
     @FXML
     private TextField searchText;
@@ -69,7 +71,7 @@ public class RootLayoutController {
             logoImage.setImage(logo);
         } catch (IOException ie) {
             System.err.println("Error loading image:");
-            ie.printStackTrace();
+            logger.error(ie.getMessage());
         }
 
         showErrorPane();
@@ -192,7 +194,7 @@ public class RootLayoutController {
             });
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
