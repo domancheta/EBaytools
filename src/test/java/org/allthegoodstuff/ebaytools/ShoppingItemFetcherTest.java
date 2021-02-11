@@ -1,6 +1,5 @@
 package org.allthegoodstuff.ebaytools;
 
-import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +10,7 @@ class ShoppingItemFetcherTest {
     @Test
     void getSingleAuctionItemTest() {
         String itemID = "402323900275";
-        FetchResult rs;
+        FetchItemResult rs;
 
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);
@@ -27,7 +26,7 @@ class ShoppingItemFetcherTest {
     @Test
     void getSingleAuctionItemBidsTest() {
         String itemID = "264787227715";
-        FetchResult rs;
+        FetchItemResult rs;
 
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);
@@ -42,7 +41,7 @@ class ShoppingItemFetcherTest {
     @Test
     void invalidItemTest() {
         String itemID = "invalid";
-        FetchResult rs;
+        FetchItemResult rs;
 
         try {
             rs = ShoppingItemFetcher.getSingleItem(itemID);

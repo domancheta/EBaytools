@@ -3,14 +3,14 @@ package org.allthegoodstuff.ebaytools;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.eclipse.jgit.annotations.Nullable;
 
-public final class FetchResult {
+public final class FetchItemResult {
     protected enum Status {FAILED, SUCCEEDED} ;
 
     private Status status;
     private String errorMessage;
     private SaleItem saleItem;
 
-    public FetchResult(Status status, @Nullable String errorMessage, @Nullable SaleItem saleItem) {
+    public FetchItemResult(Status status, @Nullable String errorMessage, @Nullable SaleItem saleItem) {
         this.status = status;
         if (status == Status.SUCCEEDED) {
             this.saleItem = saleItem;
