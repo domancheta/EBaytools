@@ -34,7 +34,7 @@ public class ShoppingItemFetcher {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private final static Logger logger = LogManager.getLogger("GLOBAL");
 
-    public static FetchResult getSingleItem(String itemID) throws Exception {
+    public static FetchItemResult getSingleItem(String itemID) throws Exception {
 
         String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
 
@@ -66,7 +66,7 @@ public class ShoppingItemFetcher {
             logger.error("response status code: " + response.statusCode() + "\n");
             logger.error("response headers: " + response.headers() + "\n");
 
-            return new FetchResult(FetchResult.Status.FAILED, errorMessage, null);
+            return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
         }
 
 
@@ -87,7 +87,7 @@ public class ShoppingItemFetcher {
             logger.error("response request: " + response.request());
             logger.error("response body: " + response.body() + "\n");
 
-            return new FetchResult(FetchResult.Status.FAILED, errorMessage, null);
+            return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
         }
 
 
@@ -105,7 +105,7 @@ public class ShoppingItemFetcher {
         logger.trace("response body: " + response.body() + "\n");
         logger.trace("request url: " + response.request() + "\n");
 
-        return new FetchResult(FetchResult.Status.SUCCEEDED, null, saleitem);
+        return new FetchItemResult(FetchItemResult.Status.SUCCEEDED, null, saleitem);
 
     }
 

@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
-import org.allthegoodstuff.ebaytools.FetchResult;
+import org.allthegoodstuff.ebaytools.FetchItemResult;
 import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
@@ -138,7 +138,7 @@ public class RootLayoutController {
                 protected Void call() throws Exception{
                     // TODO: review validity of handling search textfield in the task
                     // TODO: should asynchronous version of http call be used?
-                    FetchResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
+                    FetchItemResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
                     if (result.fetchSucceeded()) {
                         errorPane.setVisible(false);
                         candidateWatchlistSaleItem = result.getSaleItem();
@@ -175,6 +175,7 @@ public class RootLayoutController {
     @FXML
     private void searchItem() {
         if (salesItemsViewController.itemExists(searchText.getText())) {
+            // todo: give a feedback message to user somewhere
             return;
         }
 
