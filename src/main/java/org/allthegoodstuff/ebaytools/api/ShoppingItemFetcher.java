@@ -1,7 +1,9 @@
-package org.allthegoodstuff.ebaytools;
+package org.allthegoodstuff.ebaytools.api;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import org.allthegoodstuff.ebaytools.api.FetchItemResult;
+import org.allthegoodstuff.ebaytools.api.ShoppingAPIUriBuilder;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

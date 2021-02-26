@@ -1,4 +1,4 @@
-package org.allthegoodstuff.ebaytools;
+package org.allthegoodstuff.ebaytools.api;
 
 import org.allthegoodstuff.ebaytools.config.DaggerShoppingConfigFactory;
 import org.allthegoodstuff.ebaytools.config.ShoppingConfig;

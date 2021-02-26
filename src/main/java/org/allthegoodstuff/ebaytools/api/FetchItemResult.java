@@ -1,4 +1,4 @@
-package org.allthegoodstuff.ebaytools;
+package org.allthegoodstuff.ebaytools.api;
 
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.eclipse.jgit.annotations.Nullable;

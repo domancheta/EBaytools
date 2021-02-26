@@ -1,5 +1,7 @@
 package org.allthegoodstuff.ebaytools;
 
+import org.allthegoodstuff.ebaytools.api.FetchItemResult;
+import org.allthegoodstuff.ebaytools.api.ShoppingItemFetcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
