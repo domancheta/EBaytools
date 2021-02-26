@@ -16,8 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
-import org.allthegoodstuff.ebaytools.FetchItemResult;
-import org.allthegoodstuff.ebaytools.ShoppingItemFetcher;
+import org.allthegoodstuff.ebaytools.api.FetchItemResult;
+import org.allthegoodstuff.ebaytools.api.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 import java.io.FileInputStream;
