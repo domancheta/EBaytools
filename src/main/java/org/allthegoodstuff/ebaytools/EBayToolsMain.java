@@ -6,7 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.allthegoodstuff.ebaytools.db.*;
+import org.allthegoodstuff.ebaytools.config.DaggerShoppingConfigFactory;
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
+import org.allthegoodstuff.ebaytools.db.Database;
+import org.allthegoodstuff.ebaytools.db.DaggerDatabaseFactory;
 import org.allthegoodstuff.ebaytools.view.RootLayoutController;
 import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
 import org.apache.logging.log4j.LogManager;
@@ -22,10 +25,17 @@ public class EBayToolsMain extends Application {
     private SalesItemsViewController salesItemsViewController;
     //todo: consider async logging for performant logging
     private final static Logger logger = LogManager.getLogger("GLOBAL");
+    final private ShoppingConfig shoppingConfig;
     final private Database db;
 
+    //todo: probably should inject db and config as a parameter
     public EBayToolsMain() {
+        shoppingConfig = DaggerShoppingConfigFactory.create().configSettings();
         db = DaggerDatabaseFactory.create().database();
+        db.initialize(shoppingConfig);
+        rootLayoutController = new RootLayoutController();
+        //todo: put into new constructor if possible - seems fxml loading sequence disallows this?
+        rootLayoutController.setConfigurationObject(shoppingConfig);
     }
 
     @Override
@@ -105,7 +115,7 @@ public class EBayToolsMain extends Application {
         // this is one of the last methods executed when the app exits
         // todo: find where else that the app may inadvertently exit and fail to close db connection
         db.shutdown();
-        logger.info("Exitted this wonderful app!  Have a nice day!");
+        logger.info("Exited this wonderful app!  Have a nice day!");
     }
 
 

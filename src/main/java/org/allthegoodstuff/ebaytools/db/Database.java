@@ -1,5 +1,6 @@
 package org.allthegoodstuff.ebaytools.db;
 
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
 import javax.inject.Singleton;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 @Singleton
 public interface Database {
 
+    public void initialize(ShoppingConfig shoppingConfig);
     public Connection getConnection();
     public Statement getStatement();
     public boolean executeStatement(Statement mS, String statement);

@@ -7,6 +7,7 @@ public class ShoppingAPIUriBuilder {
 
     private static ShoppingConfig shoppingConfig;
 
+    //todo: have the injected shopping config object from main class be passed into constructor here
     static {
         shoppingConfig = DaggerShoppingConfigFactory.create().configSettings();
     }
@@ -17,7 +18,7 @@ public class ShoppingAPIUriBuilder {
         String fetchUri = builtFetchUri.append(shoppingConfig.baseApiUri()).append("?")
                 .append(shoppingConfig.callname()).append("&")
                 .append(shoppingConfig.rsEncoding()).append("&")
-                .append(shoppingConfig.appID()).append("&")
+//                .append(shoppingConfig.appID()).append("&")
                 .append(shoppingConfig.siteid()).append("&")
                 .append(shoppingConfig.apiVersion()).append("&")
                 .append("ItemID=").append(itemID)

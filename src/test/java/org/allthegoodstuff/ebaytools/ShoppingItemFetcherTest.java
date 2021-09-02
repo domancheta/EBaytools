@@ -2,12 +2,23 @@ package org.allthegoodstuff.ebaytools;
 
 import org.allthegoodstuff.ebaytools.api.FetchItemResult;
 import org.allthegoodstuff.ebaytools.api.ShoppingItemFetcher;
+import org.allthegoodstuff.ebaytools.config.DaggerShoppingConfigFactory;
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 
 class ShoppingItemFetcherTest {
+
+    final private static ShoppingConfig shoppingConfig = DaggerShoppingConfigFactory.create().configSettings();;
+    private static ShoppingItemFetcher shoppingItemFetcher;
+
+    @BeforeAll
+    static void setUp() {
+       shoppingItemFetcher = new ShoppingItemFetcher(shoppingConfig) ;
+    }
 
     @Test
     void getSingleAuctionItemTest() {
@@ -15,7 +26,7 @@ class ShoppingItemFetcherTest {
         FetchItemResult rs;
 
         try {
-            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            rs = shoppingItemFetcher.getSingleItem(itemID);
 
             Assertions.assertTrue(rs.fetchSucceeded());
             Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
@@ -31,7 +42,7 @@ class ShoppingItemFetcherTest {
         FetchItemResult rs;
 
         try {
-            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            rs = shoppingItemFetcher.getSingleItem(itemID);
             Assertions.assertTrue(rs.fetchSucceeded());
             Assertions.assertEquals(itemID, rs.getSaleItem().getItemID());
         }
@@ -46,7 +57,7 @@ class ShoppingItemFetcherTest {
         FetchItemResult rs;
 
         try {
-            rs = ShoppingItemFetcher.getSingleItem(itemID);
+            rs = shoppingItemFetcher.getSingleItem(itemID);
             Assertions.assertFalse(rs.fetchSucceeded());
             Assertions.assertNull(rs.getSaleItem());
             Assertions.assertNotNull(rs.getErrorMessage());
