@@ -115,7 +115,7 @@ public class SalesItemsViewController {
         saleItemTable.setItems(saleItemData);
 
         // show tooltips for cell items
-        //saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
+        saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
 
         // add action to display selected row in browser
         saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
