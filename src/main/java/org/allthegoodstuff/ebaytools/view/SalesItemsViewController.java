@@ -114,8 +114,10 @@ public class SalesItemsViewController {
 
         saleItemTable.setItems(saleItemData);
 
-        // show tooltips for cell items
-        saleItemTable.getColumns().forEach(this::addTooltipToColumnCells);
+        // show tooltips for cells whose content is too long to fit in certain columns
+        ObservableList<TableColumn> tippedColumns = FXCollections.observableArrayList(
+                titleColumn, startTimeColumn,endTimeColumn,sellerColumn);
+        tippedColumns.forEach(this::addTooltipToColumnCells);
 
         // add action to display selected row in browser
         saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
