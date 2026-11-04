@@ -15,14 +15,14 @@ public class ShoppingAPIUriBuilder {
     public static String getSingleItemURI (String itemID) {
         StringBuilder builtFetchUri = new StringBuilder();
 
-        String fetchUri = builtFetchUri.append(shoppingConfig.baseApiUri()).append("?")
-                .append(shoppingConfig.callname()).append("&")
-                .append(shoppingConfig.rsEncoding()).append("&")
-//                .append(shoppingConfig.appID()).append("&")
-                .append(shoppingConfig.siteid()).append("&")
-                .append(shoppingConfig.apiVersion()).append("&")
-                .append("ItemID=").append(itemID)
-                .append("&").append(shoppingConfig.includeSelector()).toString();
+        String fetchUri = builtFetchUri.append(shoppingConfig.baseApiUri())
+                .append(shoppingConfig.callname())
+//                .append(shoppingConfig.rsEncoding()).append("&")
+//                .append(shoppingConfig.siteid()).append("&")
+//                .append(shoppingConfig.apiVersion()).append("&")
+                .append("|").append(itemID)
+                .append("|0").toString();
+//                .append("&").append(shoppingConfig.includeSelector()).toString();
 
         return fetchUri;
     }

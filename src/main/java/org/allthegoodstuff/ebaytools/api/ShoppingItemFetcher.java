@@ -61,7 +61,6 @@ public class ShoppingItemFetcher {
 
         //todo: re-use current acces token if not expired else fetch new one
         OAuth2AccessToken accessToken = service.getAccessTokenClientCredentialsGrant();
-
         OAuthRequest request = new OAuthRequest(Verb.GET, uri);
         request.addHeader("X-EBAY-API-IAF-TOKEN", accessToken.getRawResponse());
         service.signRequest(accessToken, request);
@@ -73,7 +72,6 @@ public class ShoppingItemFetcher {
         try (Response response = service.execute(request)) {
             int httpStatus = response.getCode();
             responseHeaders = response.getHeaders().toString();
-
             if (httpStatus != 200) {
                 errorMessage = "HTTP status error " +  httpStatus + ": " + switch ( httpStatus ) {
                     case 400 -> "Bad Request — Client sent an invalid request";
@@ -96,21 +94,15 @@ public class ShoppingItemFetcher {
                 responseBody = response.getBody();
 
         }
-
-        /*
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
-
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        //  handle non-200 errors: 4xx, 5xx
-        int httpStatus = response.statusCode();
-         */
+        catch (Exception e) {
+            errorMessage = "Error executing request: " + e.getMessage();
+            logger.error(errorMessage);
+            logger.error("ebay api fetch request: " + uri);
+            return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
+        }
 
 
+        //TODO!:  switch to Jackson JSON parser - jsoniter is not being maintained, has some security vulnerabilities, and documentation by Chinese person is bad
         Any any = JsonIterator.deserialize(responseBody);
 
         //  handle non-existent content - i.e. item id doesn't exists
@@ -131,17 +123,27 @@ public class ShoppingItemFetcher {
             return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
         }
 
+        // set item end date value to null if item is not an auction item
+        LocalDateTime formattedEndDate = null;
+        if(any.toString("itemEndDate").isEmpty())
+            formattedEndDate = null;
+        else
+            formattedEndDate = LocalDateTime.parse(any.toString("itemEndDate"), dateFormatter);
 
         SaleItem saleitem = new SaleItem(
-                itemID, any.toString("Item", "Title"),
-                any.toString("Item", "Description"),
-                any.toString("Item", "Seller", "UserID"),
-                any.toBigDecimal("Item", "CurrentPrice", "Value"),
-                any.toInt("Item", "BidCount"),
-                LocalDateTime.parse(any.toString("Item", "EndTime"), dateFormatter),
-                LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
+                itemID, any.toString("title"),
+                any.toString("shortDescription"),
+                any.toString("seller", "username"),
+                any.toBigDecimal("price", "value"),
+                any.toInt("bidCount"),
+                formattedEndDate,
+                LocalDateTime.parse(any.toString("itemCreationDate"), dateFormatter)
                 );
 
+        logger.trace("SaleItem created: " + itemID);
+        logger.trace("bid count: " + any.toInt("bidCount") + "\n");
+        logger.trace("creation date: " + any.toString("itemCreationDate") + "\n");
+        logger.trace("end date: " + any.toString("itemEndDate") + "\n");
         logger.trace("response headers: " + responseHeaders + "\n");
         logger.trace("response body: " + responseBody + "\n");
         logger.trace("request url: " + uri + "\n");

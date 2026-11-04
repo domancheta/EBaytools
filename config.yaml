@@ -21,16 +21,16 @@ accessTokenEndpoint: "https://api.ebay.com/identity/v1/oauth2/token"
 authorizationBaseUrl: "https://auth.ebay.com/oauth2/authorize"
 defaultScope: "https://api.ebay.com/oauth/api_scope"
 
-baseApiUri: "https://open.api.ebay.com/shopping"
+baseApiUri: "https://api.ebay.com/buy"
 # append one of the following to baseApi
-getItemCallname: "callname=GetSingleItem"
+getItemCallname: "/browse/v1/item/v1"
 getItemStatusCallname: "callname=GetItemStatus"
 getShippingCostsCallName: "callname=GetShippingCosts"
 
 rsEncoding: "responseencoding=JSON"
 # todo: is there a generic yet secure appID for any user
-appid: DominicA-eShopToo-PRD-8c8ee5576-77674917
-certid: PRD-c8ee55764391-a5d8-4069-9a1f-f8f9
+appid: ""
+certid: ""
 devid: 0a0fe5d9-047c-4aaf-b29b-c00fe3a931e8
 redirecturi: Dominic_Ancheta-DominicA-eShopT-proczkyrc
 siteid: "siteid=0"
