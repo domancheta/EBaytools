@@ -85,7 +85,6 @@ public class RootLayoutController {
         showErrorPane();
 
         browserEngine = browser.getEngine();
-
         shoppingItemFetcher = new ShoppingItemFetcher(shoppingConfig);
         fetchItemService = new FetchItemService();
 
@@ -101,13 +100,27 @@ public class RootLayoutController {
                                 showAddWatchlistButton();
                            else
                                hideAddWatchlistButton();
+
                        }
         });
+
+        // Monitor exceptions via the LoadWorker
+        browserEngine.getLoadWorker().exceptionProperty().addListener((obs, oldExc, newExc) -> {
+            if (newExc != null) {
+                System.err.println("WebEngine Load Exception: " + newExc.getMessage());
+                newExc.printStackTrace();
+            }
+        });
+
+        // Capture HTTP and network-specific errors
+        browserEngine.setOnError(event -> System.err.println("Engine Error: " + event.getMessage()));
 
     }
 
     public void showItemBrowserPage (String itemID) {
-        String itemUrl = "https://www.ebay.com/itm/" + itemID;
+        String itemUrl = "https://ebay.com/itm/" + itemID;
+        System.out.println("DEBUG: loading item url: " + itemUrl);
+
         progressCircle.setVisible(true);
         browserEngine.load(itemUrl);
     }
@@ -150,9 +163,11 @@ public class RootLayoutController {
                     // TODO: review validity of handling search textfield in the task
                     // TODO: should asynchronous version of http call be used?
                     FetchItemResult result = shoppingItemFetcher.getSingleItem(searchText.getText());
+
                     if (result.fetchSucceeded()) {
                         errorPane.setVisible(false);
                         candidateWatchlistSaleItem = result.getSaleItem();
+
                         // flag to show watchlist button if the item entered is valid
                         itemAddable = true;
                     }
