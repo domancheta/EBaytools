@@ -146,7 +146,11 @@ public class SQLiteDB implements Database{
             int packedInt = saleItem.getPrice().scaleByPowerOfTen(4).intValue();
             stInsertSalesItem.setInt(5, packedInt);
             stInsertSalesItem.setInt(6, saleItem.getBids());
-            stInsertSalesItem.setString(7, saleItem.getEndTime().toString());
+            LocalDateTime endTime = saleItem.getEndTime();
+            if (endTime != null)
+                stInsertSalesItem.setString(7, endTime.toString());
+            else
+                stInsertSalesItem.setNull(7, Types.VARCHAR);
             stInsertSalesItem.setString(8, saleItem.getStartTime().toString());
 
             return stInsertSalesItem.executeUpdate();
