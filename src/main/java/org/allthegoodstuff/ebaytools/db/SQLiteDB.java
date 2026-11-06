@@ -192,7 +192,7 @@ public class SQLiteDB implements Database{
                 sellerInfo = rs.getString(cSellerInfo);
                 price = new BigDecimal(rs.getInt(cPrice)).scaleByPowerOfTen(-4);
                 bids = rs.getInt(cBids);
-                endTime = LocalDateTime.parse(rs.getString(cEndTime), DateTimeFormatter.ISO_DATE_TIME);
+                endTime = rs.getString(cEndTime) != null ? LocalDateTime.parse(rs.getString(cEndTime), DateTimeFormatter.ISO_DATE_TIME) : null;
                 startTime = LocalDateTime.parse(rs.getString(cStartTime), DateTimeFormatter.ISO_DATE_TIME);
 
                 saleItems.add ( new SaleItem(itemId, title, description, sellerInfo, price, bids, endTime, startTime ));
