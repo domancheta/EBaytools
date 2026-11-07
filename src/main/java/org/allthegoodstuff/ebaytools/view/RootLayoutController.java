@@ -118,7 +118,7 @@ public class RootLayoutController {
     }
 
     public void showItemBrowserPage (String itemID) {
-        String itemUrl = "https://ebay.com/itm/" + itemID;
+        String itemUrl = "https://www.ebay.com/itm/" + itemID;
         System.out.println("DEBUG: loading item url: " + itemUrl);
 
         progressCircle.setVisible(true);
