@@ -6,11 +6,20 @@ import javax.inject.Singleton;
 public interface ShoppingConfig {
 
     // property strings to be used to build out fetch API URIs
+    public String mainTableName();
+
+    public String dbDriverName();
+
+    public String logoImageFilename();
+
+    // property strings to be used to build out fetch API URIs
     public String baseApiUri();
 
     public String apiVersion();
 
     public String appID();
+
+    public String certID();
 
     // call to retrieve info on single item
     public String callname();

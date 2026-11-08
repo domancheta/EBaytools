@@ -2,12 +2,17 @@ package org.allthegoodstuff.ebaytools.api;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
-import org.allthegoodstuff.ebaytools.api.FetchItemResult;
-import org.allthegoodstuff.ebaytools.api.ShoppingAPIUriBuilder;
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,47 +37,73 @@ import java.util.concurrent.CompletableFuture;
 // todo: make ShoppingItemFetcher an interface and make implemented class - ebayItemFetcher
 public class ShoppingItemFetcher {
 
-    private final static DateTimeFormatter dateFormatter =
+    private final DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    private final static Logger logger = LogManager.getLogger("GLOBAL");
+    private final Logger logger = LogManager.getLogger("GLOBAL");
 
-    public static FetchItemResult getSingleItem(String itemID) throws Exception {
+    private ShoppingConfig shoppingConfig;
+
+    public ShoppingItemFetcher(ShoppingConfig shoppingConfig) {
+        this.shoppingConfig = shoppingConfig;
+    }
+
+    public FetchItemResult getSingleItem(String itemID) throws Exception {
 
         String uri = ShoppingAPIUriBuilder.getSingleItemURI(itemID);
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .build();
+        String clientID = shoppingConfig.appID();
+        String clientSecret = shoppingConfig.certID();
 
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+        OAuth20Service service = new ServiceBuilder(clientID)
+                .apiSecret(clientSecret)
+                .defaultScope("https://api.ebay.com/oauth/api_scope") // replace with desired scope
+                .build(EbayApi20.instance());
 
-        //  handle non-200 errors: 4xx, 5xx
-        int httpStatus = response.statusCode();
+        //todo: re-use current acces token if not expired else fetch new one
+        OAuth2AccessToken accessToken = service.getAccessTokenClientCredentialsGrant();
+        OAuthRequest request = new OAuthRequest(Verb.GET, uri);
+        request.addHeader("X-EBAY-API-IAF-TOKEN", accessToken.getRawResponse());
+        service.signRequest(accessToken, request);
+
+        String responseBody;
+        String responseHeaders;
         String errorMessage = "";
 
-        if (httpStatus != 200) {
-            errorMessage = "HTTP status error " +  httpStatus + ": " + switch ( httpStatus ) {
-                case 400 -> "Bad Request — Client sent an invalid request";
-                case 401 -> "Unauthorized — Client failed to authenticate with the server";
-                case 403 -> "Forbidden — Client doesn't access to the requested resource";
-                case 404 -> "Not Found — The requested resource does not exist";
-                case 412 -> "Precondition Failed — Condition(s) in the request header fields evaluated to false";
-                case 500 -> "Internal Server Error — An error occurred on the server";
-                case 503 -> "Service Unavailable — The requested service is not available";
-                default -> "Unexpected HTTP response occurred";
-            };
+        try (Response response = service.execute(request)) {
+            int httpStatus = response.getCode();
+            responseHeaders = response.getHeaders().toString();
+            if (httpStatus != 200) {
+                errorMessage = "HTTP status error " +  httpStatus + ": " + switch ( httpStatus ) {
+                    case 400 -> "Bad Request — Client sent an invalid request";
+                    case 401 -> "Unauthorized — Client failed to authenticate with the server";
+                    case 403 -> "Forbidden — Client doesn't access to the requested resource";
+                    case 404 -> "Not Found — The requested resource does not exist";
+                    case 412 -> "Precondition Failed — Condition(s) in the request header fields evaluated to false";
+                    case 500 -> "Internal Server Error — An error occurred on the server";
+                    case 503 -> "Service Unavailable — The requested service is not available";
+                    default -> "Unexpected HTTP response occurred";
+                };
 
+                logger.error(errorMessage);
+                logger.error("response status code: " + httpStatus + "\n");
+                logger.error("response headers: " + responseHeaders + "\n");
+
+                return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
+            }
+            else
+                responseBody = response.getBody();
+
+        }
+        catch (Exception e) {
+            errorMessage = "Error executing request: " + e.getMessage();
             logger.error(errorMessage);
-            logger.error("response status code: " + response.statusCode() + "\n");
-            logger.error("response headers: " + response.headers() + "\n");
-
+            logger.error("ebay api fetch request: " + uri);
             return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
         }
 
 
-        Any any = JsonIterator.deserialize(response.body());
+        //TODO!:  switch to Jackson JSON parser - jsoniter is not being maintained, has some security vulnerabilities, and documentation by Chinese person is bad
+        Any any = JsonIterator.deserialize(responseBody);
 
         //  handle non-existent content - i.e. item id doesn't exists
         //  TODO: should expired sales item be checked for failure or warning before adding?
@@ -86,26 +117,36 @@ public class ShoppingItemFetcher {
             }
 
             logger.error(errorMessage);
-            logger.error("response request: " + response.request());
-            logger.error("response body: " + response.body() + "\n");
+            logger.error("response request: " + uri);
+            logger.error("response body: " + responseBody + "\n");
 
             return new FetchItemResult(FetchItemResult.Status.FAILED, errorMessage, null);
         }
 
+        // set item end date value to null if item is not an auction item
+        LocalDateTime formattedEndDate = null;
+        if(any.toString("itemEndDate").isEmpty())
+            formattedEndDate = null;
+        else
+            formattedEndDate = LocalDateTime.parse(any.toString("itemEndDate"), dateFormatter);
 
         SaleItem saleitem = new SaleItem(
-                itemID, any.toString("Item", "Title"),
-                any.toString("Item", "Description"),
-                any.toString("Item", "Seller", "UserID"),
-                any.toBigDecimal("Item", "CurrentPrice", "Value"),
-                any.toInt("Item", "BidCount"),
-                LocalDateTime.parse(any.toString("Item", "EndTime"), dateFormatter),
-                LocalDateTime.parse(any.toString("Item", "StartTime"), dateFormatter)
+                itemID, any.toString("title"),
+                any.toString("shortDescription"),
+                any.toString("seller", "username"),
+                any.toBigDecimal("price", "value"),
+                any.toInt("bidCount"),
+                formattedEndDate,
+                LocalDateTime.parse(any.toString("itemCreationDate"), dateFormatter)
                 );
 
-        logger.trace("response headers: " + response.headers() + "\n");
-        logger.trace("response body: " + response.body() + "\n");
-        logger.trace("request url: " + response.request() + "\n");
+        logger.trace("SaleItem created: " + itemID);
+        logger.trace("bid count: " + any.toInt("bidCount") + "\n");
+        logger.trace("creation date: " + any.toString("itemCreationDate") + "\n");
+        logger.trace("end date: " + any.toString("itemEndDate") + "\n");
+        logger.trace("response headers: " + responseHeaders + "\n");
+        logger.trace("response body: " + responseBody + "\n");
+        logger.trace("request url: " + uri + "\n");
 
         return new FetchItemResult(FetchItemResult.Status.SUCCEEDED, null, saleitem);
 

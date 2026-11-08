@@ -1,3 +1,9 @@
+# database configs
+dbDriverName: "jdbc:sqlite:ebaytools.db"
+mainTableName: "sale_items"
+
+# miscellaneous
+logoImageFilename: "logo_200x200.png"
 
 # clauses to build out ebay shopping api calls
 #
@@ -9,18 +15,26 @@
 #  siteid=0&
 #  version=967&
 #  ItemID=180126682091
-baseApiUri: "https://open.api.ebay.com/shopping"
 
+# api OAuth2 token retrieval info
+accessTokenEndpoint: "https://api.ebay.com/identity/v1/oauth2/token"
+authorizationBaseUrl: "https://auth.ebay.com/oauth2/authorize"
+defaultScope: "https://api.ebay.com/oauth/api_scope"
+
+baseApiUri: "https://api.ebay.com/buy"
 # append one of the following to baseApi
-getItemCallname: "callname=GetSingleItem"
+getItemCallname: "/browse/v1/item/v1"
 getItemStatusCallname: "callname=GetItemStatus"
 getShippingCostsCallName: "callname=GetShippingCosts"
 
 rsEncoding: "responseencoding=JSON"
 # todo: is there a generic yet secure appID for any user
-appid: appid=DominicA-eShopToo-PRD-8c8ee5576-77674917
+appid:
+certid:
+devid:
+redirecturi: Dominic_Ancheta-DominicA-eShopT-proczkyrc
 siteid: "siteid=0"
-apiVersion: "version=1173"
+apiVersion: "version=1199"
 
 #todo: determine solution to include which selector to use based on the app call needs
 # maybe only a few combinations of each are needed to get the data needed
@@ -29,4 +43,3 @@ includeDetailsSelector: "IncludeSelector=Description,Details"
 #append any of these to previous details selector (let's make this default) with a comma
 includeShippingSelector: "ShippingCosts"
 includeDescriptionSelector: "TextDescription"
-

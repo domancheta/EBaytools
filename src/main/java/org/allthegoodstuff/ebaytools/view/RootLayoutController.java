@@ -18,13 +18,18 @@ import javafx.scene.web.WebView;
 import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.api.FetchItemResult;
 import org.allthegoodstuff.ebaytools.api.ShoppingItemFetcher;
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class RootLayoutController {
-
+    private final static Logger logger = LogManager.getLogger("GLOBAL");
+    private static ShoppingConfig shoppingConfig;
+    private ShoppingItemFetcher shoppingItemFetcher;
 
     @FXML
     private TextField searchText;
@@ -60,22 +65,27 @@ public class RootLayoutController {
     private boolean itemAddable = false;
     private SaleItem candidateWatchlistSaleItem;
 
+    public void setConfigurationObject(ShoppingConfig shoppingConfig) {
+      this.shoppingConfig = shoppingConfig;
+   }
+
     @FXML
     private void initialize() {
 
         try {
-            FileInputStream input = new FileInputStream("src/main/resources/logo_200x200.png");
+            String logoFilePath = "src/main/resources/" + shoppingConfig.logoImageFilename();
+            FileInputStream input = new FileInputStream(logoFilePath);
             Image logo = new Image(input);
             logoImage.setImage(logo);
         } catch (IOException ie) {
             System.err.println("Error loading image:");
-            ie.printStackTrace();
+            logger.error(ie.getMessage());
         }
 
         showErrorPane();
 
         browserEngine = browser.getEngine();
-
+        shoppingItemFetcher = new ShoppingItemFetcher(shoppingConfig);
         fetchItemService = new FetchItemService();
 
         // bind the error label to fetch service error message
@@ -90,13 +100,27 @@ public class RootLayoutController {
                                 showAddWatchlistButton();
                            else
                                hideAddWatchlistButton();
+
                        }
         });
+
+        // Monitor exceptions via the LoadWorker
+        browserEngine.getLoadWorker().exceptionProperty().addListener((obs, oldExc, newExc) -> {
+            if (newExc != null) {
+                System.err.println("WebEngine Load Exception: " + newExc.getMessage());
+                newExc.printStackTrace();
+            }
+        });
+
+        // Capture HTTP and network-specific errors
+        browserEngine.setOnError(event -> System.err.println("Engine Error: " + event.getMessage()));
 
     }
 
     public void showItemBrowserPage (String itemID) {
         String itemUrl = "https://www.ebay.com/itm/" + itemID;
+        System.out.println("DEBUG: loading item url: " + itemUrl);
+
         progressCircle.setVisible(true);
         browserEngine.load(itemUrl);
     }
@@ -138,10 +162,12 @@ public class RootLayoutController {
                 protected Void call() throws Exception{
                     // TODO: review validity of handling search textfield in the task
                     // TODO: should asynchronous version of http call be used?
-                    FetchItemResult result = ShoppingItemFetcher.getSingleItem(searchText.getText());
+                    FetchItemResult result = shoppingItemFetcher.getSingleItem(searchText.getText());
+
                     if (result.fetchSucceeded()) {
                         errorPane.setVisible(false);
                         candidateWatchlistSaleItem = result.getSaleItem();
+
                         // flag to show watchlist button if the item entered is valid
                         itemAddable = true;
                     }
@@ -193,7 +219,7 @@ public class RootLayoutController {
             });
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package org.allthegoodstuff.ebaytools.db;
 
+import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +15,11 @@ import java.util.ArrayList;
 public class SQLiteDB implements Database{
 
     private Connection conn;
-    // todo: retrieve following strings from config properties
-    private String dbDriverName = "jdbc:sqlite:ebaytools.db";
-    private String mainTableName = "sale_items";
+    private ShoppingConfig shoppingConfig;
+
+    // retrieve following properties from config
+    private String dbDriverName;
+    private String mainTableName;
     private final static Logger logger = LogManager.getLogger("GLOBAL");
 
     // main table column names
@@ -28,11 +31,17 @@ public class SQLiteDB implements Database{
     private static PreparedStatement stInsertSalesItem;
     private static PreparedStatement sthDeleteSalesItem;
 
-
     @Inject
     public SQLiteDB () {
+    }
+
+    public void initialize(ShoppingConfig shoppingConfig) {
+        this.shoppingConfig = shoppingConfig;
+
+        dbDriverName = shoppingConfig.dbDriverName();
+        mainTableName = shoppingConfig.mainTableName();
         try {
-            conn = DriverManager.getConnection( dbDriverName);
+            conn = DriverManager.getConnection(dbDriverName);
         }
         catch(SQLException se) {
             // todo: handle output of all sql exceptions.  should output to log as well
@@ -64,7 +73,7 @@ public class SQLiteDB implements Database{
                 String qMainTableCreate = "create table " + mainTableName + "(" + cItemID + " PRIMARY KEY," +
                         cTitle + ", " + cDescription + ", " + cSellerInfo + ", " + cPrice + " INTEGER, " +
                         cBids + " INTEGER, " + cEndTime + ", " + cStartTime + ")";
-                if ( createStatement.execute( qMainTableCreate ) );
+                if ( createStatement.execute( qMainTableCreate ) )
                     logger.info("Table " + mainTableName + " created successfully!");
             }
 
@@ -137,7 +146,11 @@ public class SQLiteDB implements Database{
             int packedInt = saleItem.getPrice().scaleByPowerOfTen(4).intValue();
             stInsertSalesItem.setInt(5, packedInt);
             stInsertSalesItem.setInt(6, saleItem.getBids());
-            stInsertSalesItem.setString(7, saleItem.getEndTime().toString());
+            LocalDateTime endTime = saleItem.getEndTime();
+            if (endTime != null)
+                stInsertSalesItem.setString(7, endTime.toString());
+            else
+                stInsertSalesItem.setNull(7, Types.VARCHAR);
             stInsertSalesItem.setString(8, saleItem.getStartTime().toString());
 
             return stInsertSalesItem.executeUpdate();
@@ -179,7 +192,7 @@ public class SQLiteDB implements Database{
                 sellerInfo = rs.getString(cSellerInfo);
                 price = new BigDecimal(rs.getInt(cPrice)).scaleByPowerOfTen(-4);
                 bids = rs.getInt(cBids);
-                endTime = LocalDateTime.parse(rs.getString(cEndTime), DateTimeFormatter.ISO_DATE_TIME);
+                endTime = rs.getString(cEndTime) != null ? LocalDateTime.parse(rs.getString(cEndTime), DateTimeFormatter.ISO_DATE_TIME) : null;
                 startTime = LocalDateTime.parse(rs.getString(cStartTime), DateTimeFormatter.ISO_DATE_TIME);
 
                 saleItems.add ( new SaleItem(itemId, title, description, sellerInfo, price, bids, endTime, startTime ));

@@ -33,6 +33,18 @@ public class Cfg4JShoppingConfig implements ShoppingConfig {
 
     }
 
+    public String mainTableName() {
+        return configProvider.getProperty("mainTableName", String.class);
+    }
+
+    public String dbDriverName() {
+        return configProvider.getProperty("dbDriverName", String.class);
+    }
+
+    public String logoImageFilename() {
+        return configProvider.getProperty("logoImageFilename", String.class);
+    }
+
     public String baseApiUri() {
        return configProvider.getProperty("baseApiUri", String.class);
     }
@@ -43,6 +55,10 @@ public class Cfg4JShoppingConfig implements ShoppingConfig {
 
     public String appID() {
         return configProvider.getProperty("appid", String.class);
+    }
+
+    public String certID() {
+        return configProvider.getProperty("certid", String.class);
     }
 
     public String callname() {
