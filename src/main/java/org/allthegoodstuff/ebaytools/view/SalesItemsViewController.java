@@ -1,9 +1,11 @@
 package org.allthegoodstuff.ebaytools.view;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -14,28 +16,30 @@ import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 
+import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
-public class SalesItemsViewController {
+public class SalesItemsViewController implements Initializable {
     @FXML
     private TableView<SaleItem> saleItemTable;
 
     @FXML
-    private TableColumn<SaleItem, String> itemIDColumn;
-    @FXML
-    private TableColumn<SaleItem, String> titleColumn;
-    @FXML
-    private TableColumn<SaleItem, String> priceColumn;
+    private TableColumn<SaleItem, SaleItem> itemSummaryColumn;
+//    @FXML
+//    private TableColumn<SaleItem, String> titleColumn;
+//    @FXML
+//    private TableColumn<SaleItem, String> priceColumn;
     @FXML
     private TableColumn<SaleItem, String> bidsColumn;
     @FXML
     private TableColumn<SaleItem, LocalDateTime> startTimeColumn;
     @FXML
     private TableColumn<SaleItem, LocalDateTime> endTimeColumn;
-    @FXML
-    private TableColumn<SaleItem, String> sellerColumn;
+//    @FXML
+//    private TableColumn<SaleItem, String> sellerColumn;
 
     /**
      * The data as an observable list of sale items.
@@ -103,14 +107,21 @@ public class SalesItemsViewController {
     }
 
     @FXML
-    private void initialize() {
-        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
-        titleColumn.setCellValueFactory(celldata -> celldata.getValue().titleProperty());
-        priceColumn.setCellValueFactory(celldata -> Bindings.format("%.2f", celldata.getValue().priceProperty()));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+//    private void initialize() {
+
+        //todo:  fix up this.  the SaleItemViewCell passed is null as observed in debugging.
+        itemSummaryColumn.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue()));
+        itemSummaryColumn.setCellFactory((TableColumn<SaleItem, SaleItem> celldata) -> new SaleItemViewCell());
+
+//        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
+//        titleColumn.setCellValueFactory(celldata -> celldata.getValue().titleProperty());
+//        priceColumn.setCellValueFactory(celldata -> Bindings.format("%.2f", celldata.getValue().priceProperty()));
         bidsColumn.setCellValueFactory(celldata -> celldata.getValue().bidsProperty().asString());
         startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
         endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
-        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
+//        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
 
         saleItemTable.setItems(saleItemData);
 
@@ -200,6 +211,7 @@ public class SalesItemsViewController {
 
     public void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
+        //todo: action to enter into database should be actually done on 'add to watchlist' button action event
         db.insertSaleItemRow(saleItem);
     }
 
