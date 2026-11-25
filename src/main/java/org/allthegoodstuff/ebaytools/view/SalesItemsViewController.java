@@ -18,114 +18,57 @@ import java.time.LocalDateTime;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
-public class SalesItemsViewController {
-    @FXML
-    private TableView<SaleItem> saleItemTable;
+public abstract class SalesItemsViewController {
 
     @FXML
-    private TableColumn<SaleItem, String> itemIDColumn;
+    protected TableView<SaleItem> saleItemTable;
+
+    // table columns
     @FXML
-    private TableColumn<SaleItem, String> titleColumn;
+    protected TableColumn<SaleItem, SaleItem> itemSummaryColumn;
+
     @FXML
-    private TableColumn<SaleItem, String> priceColumn;
+    protected TableColumn<SaleItem, String> itemIDColumn;
     @FXML
-    private TableColumn<SaleItem, String> bidsColumn;
+    protected TableColumn<SaleItem, String> titleColumn;
     @FXML
-    private TableColumn<SaleItem, LocalDateTime> startTimeColumn;
+    protected TableColumn<SaleItem, String> priceColumn;
     @FXML
-    private TableColumn<SaleItem, LocalDateTime> endTimeColumn;
+    protected TableColumn<SaleItem, String> bidsColumn;
     @FXML
-    private TableColumn<SaleItem, String> sellerColumn;
+    protected TableColumn<SaleItem, LocalDateTime> startTimeColumn;
+    @FXML
+    protected TableColumn<SaleItem, LocalDateTime> endTimeColumn;
+    @FXML
+    protected TableColumn<SaleItem, String> sellerColumn;
+    @FXML
+    protected TableColumn<SaleItem, String> imageColumn;
 
     /**
      * The data as an observable list of sale items.
      */
-    private final ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
+    protected final ObservableList<SaleItem> saleItemData = FXCollections.observableArrayList();
 
-    private Database db;
+    protected Database db;
 
     RootLayoutController rootLayoutController;
 
+    // boolean guard flag to ignore selection events when switching between watchlist views; don't refresh the browser page when switching views
+    private boolean ignoreSelectionEvents = false;
+
     Preferences prefs = Preferences.userNodeForPackage(EBayToolsMain.class);
 
-    // add tooltip popups to table cells
-    private <T> void addTooltipToColumnCells(TableColumn<SaleItem,T> column) {
-
-        Callback<TableColumn<SaleItem, T>, TableCell<SaleItem,T>> existingCellFactory
-                = column.getCellFactory();
-
-        column.setCellFactory(c -> {
-            TableCell<SaleItem, T> cell = existingCellFactory.call(c);
-
-            final Tooltip tooltip = new Tooltip();
-            // can use arbitrary binding here to make text depend on cell
-            // in any way you need:
-            tooltip.textProperty().bind(cell.itemProperty().asString());
-
-            // disallow 'null' text tooltip for empty cells
-            cell.tooltipProperty().bind(Bindings.when(Bindings.or(cell.emptyProperty(), cell.itemProperty()
-                    .isNull())).then((Tooltip) null).otherwise(tooltip));
-            return cell ;
-        });
-    }
-
-    // Confirmation alert dialog with option to not ask to confirm action (i.e. delete item) again
-    public static Alert createAlertWithOptOut(Alert.AlertType type, String title, String headerText,
-                                              String message, String optOutMessage, Consumer<Boolean> optOutAction,
-                                              ButtonType... buttonTypes) {
-        Alert alert = new Alert(type);
-        // Need to force the alert to layout in order to grab the graphic,
-        // as we are replacing the dialog pane with a custom pane
-        alert.getDialogPane().applyCss();
-        Node graphic = alert.getDialogPane().getGraphic();
-        // Create a new dialog pane that has a checkbox instead of the hide/show details button
-        // Use the supplied callback for the action of the checkbox
-        alert.setDialogPane(new DialogPane() {
-            @Override
-            protected Node createDetailsButton() {
-                CheckBox optOut = new CheckBox();
-                optOut.setText(optOutMessage);
-                optOut.setOnAction(e -> optOutAction.accept(optOut.isSelected()));
-                return optOut;
-            }
-        });
-        alert.getDialogPane().getButtonTypes().addAll(buttonTypes);
-        alert.getDialogPane().setContentText(message);
-        // Fool the dialog into thinking there is some expandable content
-        // a Group won't take up any space if it has no children
-        alert.getDialogPane().setExpandableContent(new Group());
-        alert.getDialogPane().setExpanded(true);
-        // Reset the dialog graphic using the default style
-        alert.getDialogPane().setGraphic(graphic);
-        alert.setTitle(title);
-        alert.setHeaderText(headerText);
-        return alert;
-    }
-
     @FXML
-    private void initialize() {
-        itemIDColumn.setCellValueFactory(celldata -> celldata.getValue().itemIDProperty());
-        titleColumn.setCellValueFactory(celldata -> celldata.getValue().titleProperty());
-        priceColumn.setCellValueFactory(celldata -> Bindings.format("%.2f", celldata.getValue().priceProperty()));
-        bidsColumn.setCellValueFactory(celldata -> celldata.getValue().bidsProperty().asString());
-        startTimeColumn.setCellValueFactory(celldata -> celldata.getValue().startTimeProperty());
-        endTimeColumn.setCellValueFactory(celldata -> celldata.getValue().endTimeProperty());
-        sellerColumn.setCellValueFactory(celldata -> celldata.getValue().sellerInfoProperty());
-
-        saleItemTable.setItems(saleItemData);
-
-        // show tooltips for cells whose content is too long to fit in certain columns
-        ObservableList<TableColumn> tippedColumns = FXCollections.observableArrayList(
-                titleColumn, startTimeColumn,endTimeColumn,sellerColumn);
-        tippedColumns.forEach(this::addTooltipToColumnCells);
+    public final void initialize() {
 
         // add action to display selected row in browser
         saleItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                rootLayoutController.hideAddWatchlistButton();
-                rootLayoutController.showItemBrowserPage(newSelection.getItemID());
-                rootLayoutController.hideErrorPane();
+            if (ignoreSelectionEvents || newSelection == null) {
+                return;
             }
+            rootLayoutController.hideAddWatchlistButton();
+            rootLayoutController.showItemBrowserPage(newSelection.getItemID());
+            rootLayoutController.hideErrorPane();
         } );
 
         // sales item table row action bindings here
@@ -175,9 +118,9 @@ public class SalesItemsViewController {
 
                 // special styling for right-clicked rows
                 contextMenu.setOnShowing(event -> {
-                  rowStyleBeforeRightClick[0] = row.getStyle();
-                  //row.getStyleClass().add("right-clicked-row");
-                  row.setStyle(rightSelectedStyle);
+                    rowStyleBeforeRightClick[0] = row.getStyle();
+                    //row.getStyleClass().add("right-clicked-row");
+                    row.setStyle(rightSelectedStyle);
                 });
 
                 contextMenu.setOnHidden(event -> {
@@ -186,7 +129,7 @@ public class SalesItemsViewController {
                         row.setStyle(rowStyleBeforeRightClick[0]);
                     else if (!alert.isShowing())
                         row.setStyle(rowStyleBeforeRightClick[0]);
-                        //row.getStyleClass().remove("right-clicked-row");
+                    //row.getStyleClass().remove("right-clicked-row");
                 });
 
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:
@@ -198,8 +141,86 @@ public class SalesItemsViewController {
                 return row ;
             }
         });
+
+        onInitialize();
     }
 
+    protected abstract void onInitialize();
+
+    // add tooltip popups to table cells
+    protected <T> void addTooltipToColumnCells(TableColumn<SaleItem,T> column) {
+
+        Callback<TableColumn<SaleItem, T>, TableCell<SaleItem,T>> existingCellFactory
+                = column.getCellFactory();
+
+        column.setCellFactory(c -> {
+            TableCell<SaleItem, T> cell = existingCellFactory.call(c);
+
+            final Tooltip tooltip = new Tooltip();
+            // can use arbitrary binding here to make text depend on cell
+            // in any way you need:
+            tooltip.textProperty().bind(cell.itemProperty().asString());
+
+            // disallow 'null' text tooltip for empty cells
+            cell.tooltipProperty().bind(Bindings.when(Bindings.or(cell.emptyProperty(), cell.itemProperty()
+                    .isNull())).then((Tooltip) null).otherwise(tooltip));
+            return cell ;
+        });
+    }
+
+    // select a row in the saleItemTable without triggering listener which would refresh browser page
+    public void selectRowSilently(int rowIndex) {
+        ignoreSelectionEvents = true;
+        try {
+            saleItemTable.getSelectionModel().select(rowIndex);
+        } finally {
+            ignoreSelectionEvents = false;
+        }
+    }
+
+    // Confirmation alert dialog with option to not ask to confirm action (i.e. delete item) again
+    protected static Alert createAlertWithOptOut(Alert.AlertType type, String title, String headerText,
+                                              String message, String optOutMessage, Consumer<Boolean> optOutAction,
+                                              ButtonType... buttonTypes) {
+        Alert alert = new Alert(type);
+        // Need to force the alert to layout in order to grab the graphic,
+        // as we are replacing the dialog pane with a custom pane
+        alert.getDialogPane().applyCss();
+        Node graphic = alert.getDialogPane().getGraphic();
+        // Create a new dialog pane that has a checkbox instead of the hide/show details button
+        // Use the supplied callback for the action of the checkbox
+        alert.setDialogPane(new DialogPane() {
+            @Override
+            protected Node createDetailsButton() {
+                CheckBox optOut = new CheckBox();
+                optOut.setText(optOutMessage);
+                optOut.setOnAction(e -> optOutAction.accept(optOut.isSelected()));
+                return optOut;
+            }
+        });
+        alert.getDialogPane().getButtonTypes().addAll(buttonTypes);
+        alert.getDialogPane().setContentText(message);
+        // Fool the dialog into thinking there is some expandable content
+        // a Group won't take up any space if it has no children
+        alert.getDialogPane().setExpandableContent(new Group());
+        alert.getDialogPane().setExpanded(true);
+        // Reset the dialog graphic using the default style
+        alert.getDialogPane().setGraphic(graphic);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        return alert;
+    }
+
+    // get index of selected sale item row in saleItemTable
+    public int getSelectedSaleItemRowIndex() {
+        return saleItemTable.getSelectionModel().getSelectedIndex();
+    }
+
+    public void selectSaleItemRowByIndex(int index) {
+        saleItemTable.getSelectionModel().select(index);
+    }
+
+    // insert new saleItem into the db and list
     public void addItemToSalesList(SaleItem saleItem) {
         saleItemData.add(saleItem);
         db.insertSaleItemRow(saleItem);
@@ -210,16 +231,15 @@ public class SalesItemsViewController {
             if ( item.getItemID().equals(itemID))
                 return true;
         }
-
         return false;
     }
 
-    public void setDatabaseAccess(Database db) {
+    public void loadSalesWatchListFromDB(Database db) {
         this.db = db;
-
         saleItemData.addAll( db.getAllSalesItemRows() );
     }
 
+    // backreference to root controller to access its members
     public void setRootLayoutControllerAccess(RootLayoutController rootLayoutController) {
         this.rootLayoutController = rootLayoutController;
     }

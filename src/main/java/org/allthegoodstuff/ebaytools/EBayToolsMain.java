@@ -36,6 +36,7 @@ public class EBayToolsMain extends Application {
         rootLayoutController = new RootLayoutController();
         //todo: put into new constructor if possible - seems fxml loading sequence disallows this?
         rootLayoutController.setConfigurationObject(shoppingConfig);
+        rootLayoutController.setDatabaseAccess(db);
     }
 
     @Override
@@ -51,7 +52,6 @@ public class EBayToolsMain extends Application {
 
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -59,8 +59,7 @@ public class EBayToolsMain extends Application {
     private void initRootLayout() {
         try {
             // Load root layout from fxml file.
-            FXMLLoader fxmlLoader = new FXMLLoader(EBayToolsMain.class
-                    .getResource("view/RootLayout.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/RootLayout.fxml"));
 
             rootLayout = fxmlLoader.load();
 
@@ -87,7 +86,7 @@ public class EBayToolsMain extends Application {
         try {
             // Load sales item view.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(EBayToolsMain.class.getResource("view/SalesItemsView.fxml"));
+            loader.setLocation(getClass().getResource("view/SalesItemsDefaultView.fxml"));
             AnchorPane salesItemsView = loader.load();
 
             // Set sales list view into the location of the layout
@@ -95,7 +94,7 @@ public class EBayToolsMain extends Application {
 
             // Give the controller access to the main app.
             salesItemsViewController = loader.getController();
-            salesItemsViewController.setDatabaseAccess(db);
+            salesItemsViewController.loadSalesWatchListFromDB(db);
 
         } catch (IOException e) {
             logger.error(e.getMessage());

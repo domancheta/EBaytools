@@ -1,14 +1,14 @@
 package org.allthegoodstuff.ebaytools.view;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +19,7 @@ import org.allthegoodstuff.ebaytools.EBayToolsMain;
 import org.allthegoodstuff.ebaytools.api.FetchItemResult;
 import org.allthegoodstuff.ebaytools.api.ShoppingItemFetcher;
 import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
+import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.model.SaleItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,9 +28,33 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class RootLayoutController {
+
     private final static Logger logger = LogManager.getLogger("GLOBAL");
     private static ShoppingConfig shoppingConfig;
+    private static Database db;
     private ShoppingItemFetcher shoppingItemFetcher;
+
+    // define watchlist menu radio button view objects and control logic for switching between watchlist views
+    public enum WatchlistViewType {
+        DEFAULT,
+        PLAIN
+    }
+    private final ObjectProperty<WatchlistViewType> currentWatchListView = new SimpleObjectProperty<>(WatchlistViewType.DEFAULT);
+    public ObjectProperty<WatchlistViewType> currentWatchListViewProperty() {
+        return currentWatchListView;
+    }
+
+    public WatchlistViewType getCurrentWatchListView() {
+        return currentWatchListView.get();
+    }
+
+    public void setCurrentWatchListView(WatchlistViewType viewType) {
+        currentWatchListView.set(viewType);
+    }
+
+    @FXML private ToggleGroup watchlistViewToggleGroup;
+    @FXML private RadioMenuItem defaultWatchListViewItem;
+    @FXML private RadioMenuItem plainWatchListViewItem;
 
     @FXML
     private TextField searchText;
@@ -69,6 +94,10 @@ public class RootLayoutController {
       this.shoppingConfig = shoppingConfig;
    }
 
+   public void setDatabaseAccess(Database db) {
+      this.db = db;
+   }
+
     @FXML
     private void initialize() {
 
@@ -100,7 +129,6 @@ public class RootLayoutController {
                                 showAddWatchlistButton();
                            else
                                hideAddWatchlistButton();
-
                        }
         });
 
@@ -115,11 +143,31 @@ public class RootLayoutController {
         // Capture HTTP and network-specific errors
         browserEngine.setOnError(event -> System.err.println("Engine Error: " + event.getMessage()));
 
+        // setup watchlist RadioMenuItemis with corresponding enum values
+        defaultWatchListViewItem.setUserData(WatchlistViewType.DEFAULT);
+        plainWatchListViewItem.setUserData(WatchlistViewType.PLAIN);
+
+        watchlistViewToggleGroup.selectToggle(defaultWatchListViewItem);
+
+        watchlistViewToggleGroup.selectedToggleProperty().addListener((obs,
+                                                                       oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                // todo: need to add exception handling for this potentially (NPE, out of bounds, etc)
+                int currentSalesItemRowIndex = salesItemsViewController.getSelectedSaleItemRowIndex();
+                WatchlistViewType selectedViewType = (WatchlistViewType) newToggle.getUserData();
+                if(selectedViewType == WatchlistViewType.DEFAULT)
+                    switchToDefaultSalesView();
+                else if (selectedViewType == WatchlistViewType.PLAIN)
+                    switchToPlainSalesView();
+                salesItemsViewController.selectRowSilently(currentSalesItemRowIndex);
+            }
+        });
+
     }
 
     public void showItemBrowserPage (String itemID) {
         String itemUrl = "https://www.ebay.com/itm/" + itemID;
-        System.out.println("DEBUG: loading item url: " + itemUrl);
+        logger.info("loading item url: " + itemUrl);
 
         progressCircle.setVisible(true);
         browserEngine.load(itemUrl);
@@ -196,6 +244,38 @@ public class RootLayoutController {
 
     public void setSalesItemsViewController(SalesItemsViewController salesItemsViewController) {
        this.salesItemsViewController = salesItemsViewController;
+    }
+
+    private void switchToDefaultSalesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("SalesItemsDefaultView.fxml"));
+            AnchorPane salesPaneView = loader.load();
+            getSalesListPane().getChildren().add(salesPaneView);
+            salesItemsViewController = loader.getController();
+            salesItemsViewController.loadSalesWatchListFromDB(db);
+
+            salesItemsViewController.setRootLayoutControllerAccess(this);
+            setSalesItemsViewController(salesItemsViewController);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void switchToPlainSalesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("SalesItemsPlainView.fxml"));
+            AnchorPane salesPaneView = loader.load();
+            getSalesListPane().getChildren().add(salesPaneView);
+            salesItemsViewController = loader.getController();
+            salesItemsViewController.loadSalesWatchListFromDB(db);
+
+            salesItemsViewController.setRootLayoutControllerAccess(this);
+            setSalesItemsViewController(salesItemsViewController);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     @FXML

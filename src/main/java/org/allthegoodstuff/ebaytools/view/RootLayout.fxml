@@ -8,28 +8,38 @@
 <?import javafx.scene.web.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@dark-theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.RootLayoutController">
-        <MenuBar>
-            <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="Open" />
-                <MenuItem mnemonicParsing="false" text="Import" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Save IDs" />
-                <MenuItem mnemonicParsing="false" text="Save DB IDs" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" onAction="#closeEventHandler" text="Exit" />
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@dark-theme.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.allthegoodstuff.ebaytools.view.RootLayoutController">
+    <MenuBar>
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" text="Open" />
+            <MenuItem mnemonicParsing="false" text="Import" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Save IDs" />
+            <MenuItem mnemonicParsing="false" text="Save DB IDs" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#closeEventHandler" text="Exit" />
+        </Menu>
+        <Menu mnemonicParsing="false" text="View">
+            <Menu mnemonicParsing="false" text="Watchlist">
+                <RadioMenuItem fx:id="defaultWatchListViewItem" mnemonicParsing="false" text="Default">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="watchlistViewToggleGroup" />
+                    </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem fx:id="plainWatchListViewItem" mnemonicParsing="false"  text="Plain" toggleGroup="$watchlistViewToggleGroup" />
             </Menu>
-            <Menu mnemonicParsing="false" text="Update Interval">
-                <MenuItem mnemonicParsing="false" text="No Updates" />
-                <MenuItem mnemonicParsing="false" text="1 Minute" />
-                <MenuItem mnemonicParsing="false" text="5 Minutes" />
-                <MenuItem mnemonicParsing="false" text="10 Minutes" />
-                <MenuItem mnemonicParsing="false" text="30 Minutes" />
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-                <MenuItem mnemonicParsing="false" text="About" />
-            </Menu>
-        </MenuBar>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Update Interval">
+            <MenuItem mnemonicParsing="false" text="No Updates" />
+            <MenuItem mnemonicParsing="false" text="1 Minute" />
+            <MenuItem mnemonicParsing="false" text="5 Minutes" />
+            <MenuItem mnemonicParsing="false" text="10 Minutes" />
+            <MenuItem mnemonicParsing="false" text="30 Minutes" />
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" text="About" />
+        </Menu>
+    </MenuBar>
     <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
         <VBox SplitPane.resizableWithParent="false">
             <HBox>
