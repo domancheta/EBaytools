@@ -1,4 +1,4 @@
-package org.allthegoodstuff.ebaytools.view;
+package org.allthegoodstuff.ebaytools.controller;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -249,7 +249,7 @@ public class RootLayoutController {
     private void switchToDefaultSalesView() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("SalesItemsDefaultView.fxml"));
+            loader.setLocation(getClass().getResource("../view/SalesItemsDefaultView.fxml"));
             AnchorPane salesPaneView = loader.load();
             getSalesListPane().getChildren().add(salesPaneView);
             salesItemsViewController = loader.getController();
@@ -265,7 +265,7 @@ public class RootLayoutController {
     private void switchToPlainSalesView() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("SalesItemsPlainView.fxml"));
+            loader.setLocation(getClass().getResource("../view/SalesItemsPlainView.fxml"));
             AnchorPane salesPaneView = loader.load();
             getSalesListPane().getChildren().add(salesPaneView);
             salesItemsViewController = loader.getController();

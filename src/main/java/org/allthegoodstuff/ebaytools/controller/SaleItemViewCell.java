@@ -1,4 +1,4 @@
-package org.allthegoodstuff.ebaytools.view;
+package org.allthegoodstuff.ebaytools.controller;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -45,7 +45,7 @@ public class SaleItemViewCell extends TableCell<SaleItem, SaleItem> {
 
         } else {
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(EBayToolsMain.class.getResource("view/SaleItemCell.fxml"));
+                mLLoader = new FXMLLoader(getClass().getResource("../view/SaleItemCell.fxml"));
                 mLLoader.setController(this);
 
                 try {

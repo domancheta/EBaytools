@@ -1,4 +1,4 @@
-package org.allthegoodstuff.ebaytools.view;
+package org.allthegoodstuff.ebaytools.controller;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

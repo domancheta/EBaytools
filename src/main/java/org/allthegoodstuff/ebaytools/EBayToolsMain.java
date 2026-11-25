@@ -10,8 +10,8 @@ import org.allthegoodstuff.ebaytools.config.DaggerShoppingConfigFactory;
 import org.allthegoodstuff.ebaytools.config.ShoppingConfig;
 import org.allthegoodstuff.ebaytools.db.Database;
 import org.allthegoodstuff.ebaytools.db.DaggerDatabaseFactory;
-import org.allthegoodstuff.ebaytools.view.RootLayoutController;
-import org.allthegoodstuff.ebaytools.view.SalesItemsViewController;
+import org.allthegoodstuff.ebaytools.controller.RootLayoutController;
+import org.allthegoodstuff.ebaytools.controller.SalesItemsViewController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
